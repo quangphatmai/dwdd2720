@@ -21,6 +21,8 @@ function App() {
           This tiny feature proves your dev environment is ready for the client project. Click the button to
           increment the counter.
         </p>
+
+        <p className="mb-5 text-sm text-slate-300 text-center">Testing GitHub + Vercel deployment</p>
         <div className="flex flex-col items-center gap-4">
           <div className="text-6xl font-mono font-semibold">{count}</div>
           <button
