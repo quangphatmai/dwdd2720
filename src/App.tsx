@@ -17,15 +17,16 @@ function App() {
           My First Vite + TypeScript + Tailwind App
         </h1>
 
-        <p className="mb-4 text-sm text-slate-300 text-center">
-          This tiny feature proves your dev environment is ready for the client project.
+        <p className="mb-5 text-sm text-slate-300 text-center">
+          This tiny feature proves your dev environment is ready for the client project. Click the button to
+          increment the counter.
         </p>
         <div className="flex flex-col items-center gap-4">
           <div className="text-6xl font-mono font-semibold">{count}</div>
           <button
             type="button"
             onClick={handleIncrement}
-            className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 transition-colors text-black font-medium"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded text-white font-medium transition-colors cursor-pointer"
           >
             Increment
           </button>
