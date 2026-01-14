@@ -11,11 +11,12 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-slate-100">
+    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-slate-100 " >
       <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-4 text-center">
+        <h1 className="text-2xl font-bold mb-4 text-center font-serif">
           My First Vite + TypeScript + Tailwind App
         </h1>
+
         <p className="mb-4 text-sm text-slate-300 text-center">
           This tiny feature proves your dev environment is ready for the client project.
         </p>
