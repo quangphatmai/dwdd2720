@@ -1,5 +1,20 @@
 import type { Project, ProjectStatus } from "../models/project";
 
+
+export function upcomingDeadlines(projects: Project[]): Project[] {
+  // Business rule: only projects that actually have a due date belong here
+  return projects.filter((p) => p.dueDate !== undefined);
+}
+
+export function printDueDateUnsafe(project: Project): string {
+  // Deliberate optional-property mistake (uncomment to see the error):
+  return project.dueDate.toUpperCase();
+  // Error: Object is possibly 'undefined'.
+
+  // Correct approach:
+  return project.dueDate ? project.dueDate.toUpperCase() : "NO DUE DATE";
+}
+
 export function getProjectsByStatus(
   projects: Project[],
   status: ProjectStatus
