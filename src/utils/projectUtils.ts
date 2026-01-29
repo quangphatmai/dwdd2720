@@ -8,7 +8,7 @@ export function upcomingDeadlines(projects: Project[]): Project[] {
 
 export function printDueDateUnsafe(project: Project): string {
   // Deliberate optional-property mistake (uncomment to see the error):
-  return project.dueDate.toUpperCase();
+  //return project.dueDate.toUpperCase();
   // Error: Object is possibly 'undefined'.
 
   // Correct approach:
