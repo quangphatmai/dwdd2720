@@ -18,9 +18,6 @@ const records: ProjectRecord[] = [
 
 
 
-
-
-
 const lines = [
   `Project: ${projectA.name}`,
   `Status (if): ${statusLabelIf(projectA.status)}`,
