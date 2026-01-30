@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import './trackerBasics.ts'
 
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

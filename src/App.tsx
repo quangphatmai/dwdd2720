@@ -5,6 +5,17 @@ import { useState } from 'react'
 import "./index.css";
 import { projects } from "./data/projects";
 import { countByStatus, formatDueDate, getProjectsByStatus } from "./utils/projectUtils";
+import { projectA, statusLabelIf, statusLabelSwitch, canEditProject } from "./status";
+
+
+const lines = [
+  `Project: ${projectA.name}`,
+  `Status (if): ${statusLabelIf(projectA.status)}`,
+  `Status (switch): ${statusLabelSwitch(projectA.status)}`,
+  `Can edit? ${canEditProject(projectA.status)}`,
+];
+
+console.log(lines.join("\n"));
 
 function App() {
   const active = getProjectsByStatus(projects, "active");
@@ -69,6 +80,9 @@ function App() {
           </ul>
         </section>
       </main>
+      <div className='p-4 max-w-2xl mx-auto bg-slate-800 rounded-lg mt-8'>
+        <pre>{lines.join("\n")}</pre>
+      </div>
     </div>
   );
 }
