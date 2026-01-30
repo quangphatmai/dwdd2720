@@ -8,6 +8,7 @@ import { countByStatus, formatDueDate, getProjectsByStatus } from "./utils/proje
 import { projectA, statusLabelIf, statusLabelSwitch, canEditProject } from "./status";
 import { normalizeStatus } from "./status";
 import { formatProjectRecord, type ProjectRecord } from "./status";
+import { sampleProjects, validateProject } from "./project-tracker";
 
 const records: ProjectRecord[] = [
   { id: "p10", name: "Brand Refresh", status: "draft", lastEditedAt: "2025-12-31" },
@@ -34,6 +35,25 @@ lines.push(`Normalize null: ${normalizeStatus(null)}`);
 for (const r of records) {
   lines.push(formatProjectRecord(r));
 }
+
+console.log("--- Validating sampleProjects ---");
+for (const p of sampleProjects) {
+  const result = validateProject(p);
+  console.log(p.id, result.ok ? "OK" : result);
+}
+
+console.log("--- Validating intentionally bad input ---");
+const badInput: unknown = {
+  id: "", // invalid
+  name: "  ", // invalid
+  owner: 42, // invalid type
+  status: "in-progress", // not allowed
+  estimateHours: -5, // invalid
+  notes: "" // invalid when provided
+};
+
+const badResult = validateProject(badInput);
+console.log(badResult);
 
 function App() {
   const active = getProjectsByStatus(projects, "active");
@@ -74,11 +94,11 @@ function App() {
       </div>
 
       {/* Project Tracker Section */}
-      <main style={{ padding: 16, fontFamily: "system-ui", maxWidth: "800px", margin: "0 auto" }}>
-        <h1>Project Tracker</h1>
+      <main  className="mx-auto max-w-2xl p-12 bg-slate-800 rounded-lg">
+        <h1 className="text-3xl font-bold mb-6 text-center">Project Tracker</h1>
 
         <section style={{ marginTop: 12 }}>
-          <h2>Summary</h2>
+          <h2 className='font-bold mb-4'>Summary</h2>
           <ul>
             <li>Planned: {countByStatus(projects, "planned")}</li>
             <li>Active: {countByStatus(projects, "active")}</li>
