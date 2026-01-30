@@ -6,6 +6,19 @@ import "./index.css";
 import { projects } from "./data/projects";
 import { countByStatus, formatDueDate, getProjectsByStatus } from "./utils/projectUtils";
 import { projectA, statusLabelIf, statusLabelSwitch, canEditProject } from "./status";
+import { normalizeStatus } from "./status";
+import { formatProjectRecord, type ProjectRecord } from "./status";
+
+const records: ProjectRecord[] = [
+  { id: "p10", name: "Brand Refresh", status: "draft", lastEditedAt: "2025-12-31" },
+  { id: "p11", name: "Client Portal", status: "active", etaDays: 14 },
+  { id: "p12", name: "SEO Audit", status: "paused", pauseReason: "Waiting on content" },
+  { id: "p13", name: "Landing Page", status: "completed", completedAt: "2025-12-15" },
+];
+
+
+
+
 
 
 const lines = [
@@ -16,6 +29,14 @@ const lines = [
 ];
 
 console.log(lines.join("\n"));
+
+lines.push(`Normalize " paused ": ${normalizeStatus(" paused ")}`);
+lines.push(`Normalize "ARCHIVED": ${normalizeStatus("ARCHIVED")}`);
+lines.push(`Normalize null: ${normalizeStatus(null)}`);
+
+for (const r of records) {
+  lines.push(formatProjectRecord(r));
+}
 
 function App() {
   const active = getProjectsByStatus(projects, "active");
