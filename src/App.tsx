@@ -20,6 +20,8 @@ import { formatProjectRecord, type ProjectRecord } from "./status";
 import "./trackerBasics.ts";
 import { sampleProjects, validateProject } from "./project-tracker";
 
+import HelperComponent from "./helpers/HelperComponent";
+
 const records: ProjectRecord[] = [
   {
     id: "p10",
@@ -89,9 +91,10 @@ function App() {
   console.log("Tracker Card Info:", trackerCard);
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100">
+    <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center flex-col">
+      <HelperComponent/>
       {/* Counter Section */}
-      <div className="flex items-center justify-center py-8">
+      <div className=" py-8">
         <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-lg p-6">
           <h1 className="text-2xl font-bold mb-4 text-center font-serif">
             My First Vite + TypeScript + Tailwind App
