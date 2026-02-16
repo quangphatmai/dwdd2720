@@ -14,6 +14,7 @@ export const projects: Project[] = [
     id: "p-1002",
     name: "Billing Integration",
     status: "blocked",
+    dueDate: "2026-02-28",
     tags: ["backend", "payments"],
     // dueDate is optional, so we can omit it for now
     days: 45,

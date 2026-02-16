@@ -1,6 +1,6 @@
 import { projects } from "../data/projects";
 import type { Project } from "../models/project";
-import { findProjectById } from "../utils/projectUtils"
+import { findProjectById, listOverdueProjects } from "../utils/projectUtils"
 
 type TrackerCard = {
   id: string;
@@ -61,6 +61,10 @@ if (p3) {
 } else {
   console.log("p-1002 not found (unexpected in sample data)");
 }
+
+const asOf = new Date("2025-12-31");
+const overdue = listOverdueProjects(projects, asOf);
+console.log("Overdue as of 2025-12-31:", overdue.map((p) => p.id));
 
 function TrackerCard() {
   return (
