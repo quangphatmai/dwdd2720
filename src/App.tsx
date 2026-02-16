@@ -4,11 +4,7 @@ import { trackerCard } from "./trackerBasics";
 import { useState } from "react";
 import "./index.css";
 import { projects } from "./data/projects";
-import {
-  countByStatus,
-  formatDueDate,
-  getProjectsByStatus,
-} from "./utils/projectUtils";
+import { countByStatus } from "./utils/projectUtils";
 import {
   projectRecords,
   statusLabelIf,
@@ -21,7 +17,7 @@ import "./trackerBasics.ts";
 import { sampleProjects, validateProject } from "./project-tracker";
 
 import HelperComponent from "./helpers/HelperComponent";
-
+import TrackerCard from "./components/TrackerCard.tsx"; 
 
 const records: ProjectRecord[] = [
   {
@@ -97,7 +93,6 @@ console.log("titlesViaFor", titlesViaFor);
 console.log("titlesViaForEach", titlesViaForEach);
 
 function App() {
-  const active = getProjectsByStatus(projects, "active");
   const [count, setCount] = useState(0);
 
   const handleIncrement = (): void => {
@@ -108,7 +103,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center flex-col">
-      <HelperComponent/>
+      <HelperComponent />
       {/* Counter Section */}
       <div className=" py-8">
         <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-lg p-6">
@@ -150,19 +145,8 @@ function App() {
             <li>Done: {countByStatus(projects, "done")}</li>
           </ul>
         </section>
-
-        <section style={{ marginTop: 12 }}>
-          <h2>Active Projects</h2>
-          <ul>
-            {active.map((project) => (
-              <li key={project.id}>
-                <strong>{project.name}</strong> — Due: {formatDueDate(project)} — Tags:{" "}
-                {project.tags.join(", ")}
-              </li>
-            ))}
-          </ul>
-        </section>
       </main>
+      <TrackerCard />
       {/* <div className="p-4 max-w-2xl mx-auto bg-slate-800 rounded-lg mt-8">
         <pre>{lines.join("\n")}</pre>
       </div> */}
