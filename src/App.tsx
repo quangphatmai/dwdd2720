@@ -10,7 +10,7 @@ import {
   getProjectsByStatus,
 } from "./utils/projectUtils";
 import {
-  projectA,
+  projectRecords,
   statusLabelIf,
   statusLabelSwitch,
   canEditProject,
@@ -45,10 +45,10 @@ const records: ProjectRecord[] = [
 ];
 
 const lines = [
-  `Project: ${projectA.name}`,
-  `Status (if): ${statusLabelIf(projectA.status)}`,
-  `Status (switch): ${statusLabelSwitch(projectA.status)}`,
-  `Can edit? ${canEditProject(projectA.status)}`,
+  `Project: ${projectRecords[0].name}`,
+  `Status (if): ${statusLabelIf(projectRecords[0].status)}`,
+  `Status (switch): ${statusLabelSwitch(projectRecords[0].status)}`,
+  `Can edit? ${canEditProject(projectRecords[0].status)}`,
 ];
 
 console.log(lines.join("\n"));
@@ -147,9 +147,9 @@ function App() {
           </ul>
         </section>
       </main>
-      <div className="p-4 max-w-2xl mx-auto bg-slate-800 rounded-lg mt-8">
+      {/* <div className="p-4 max-w-2xl mx-auto bg-slate-800 rounded-lg mt-8">
         <pre>{lines.join("\n")}</pre>
-      </div>
+      </div> */}
     </div>
   );
 }

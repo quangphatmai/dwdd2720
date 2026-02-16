@@ -1,4 +1,4 @@
-export type ProjectStatus = "planned" | "active" | "blocked" | "done";
+export type ProjectStatus = "planned" | "active" | "blocked" | "done" | "draft" | "paused" | "completed";
 
 export interface Project {
   /** A stable identifier we never want to accidentally change */
@@ -18,4 +18,7 @@ export interface Project {
 
   /** Optional free-form notes */
   notes?: string;
+  ownerEmail?: string;
+  estimatedHours?: number; // important: 0 is a valid number, but it's falsy
+  description?: string;
 }
