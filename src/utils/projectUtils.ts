@@ -34,3 +34,12 @@ export function formatDueDate(project: Project): string {
   if (!project.dueDate) return "No due date";
   return project.dueDate;
 }
+
+// Arrow function + explicit return type.
+// Returns undefined if not found.
+export const findProjectById = (
+  projects: Project[],
+  id: string
+): Project | undefined => {
+  return projects.find((project) => project.id === id);
+};
