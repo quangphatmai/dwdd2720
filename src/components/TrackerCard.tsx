@@ -7,6 +7,7 @@ type TrackerCard = {
   status: string;
   pointsLabel: string;
   dueDate: string;
+  daysLeft?: number; // optional because not all projects have a deadline
 };
 
 const trackerCards: TrackerCard[] = projects.map(
@@ -17,6 +18,7 @@ const trackerCards: TrackerCard[] = projects.map(
       status: project.status ?? "unknown",
       pointsLabel: "0 pts",
       dueDate: project.dueDate ?? "TBD",
+      daysLeft: project.status === "active" ? project.days : undefined,
     };
   },
 );
@@ -24,7 +26,9 @@ const trackerCards: TrackerCard[] = projects.map(
 const activeProjects: TrackerCard[] = trackerCards.filter((tracker) =>
   tracker.status.includes("active"),
 );
+const totalDaysLeft = activeProjects.reduce((sum, card) => sum + (card.daysLeft ?? 0), 0);
 
+console.log("Total days left across active projects:", totalDaysLeft);
 
 console.log("trackerCards", trackerCards);
 

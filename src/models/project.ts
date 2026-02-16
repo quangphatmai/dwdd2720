@@ -21,4 +21,5 @@ export interface Project {
   ownerEmail?: string;
   estimatedHours?: number; // important: 0 is a valid number, but it's falsy
   description?: string;
+  days: number;
 }
