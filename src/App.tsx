@@ -22,6 +22,7 @@ import { sampleProjects, validateProject } from "./project-tracker";
 
 import HelperComponent from "./helpers/HelperComponent";
 
+
 const records: ProjectRecord[] = [
   {
     id: "p10",
@@ -79,6 +80,21 @@ const badInput: unknown = {
 
 const badResult = validateProject(badInput);
 console.log(badResult);
+
+// 1) for-loop: build a list of titles
+const titlesViaFor: string[] = [];
+for (let i = 0; i < projects.length; i++) {
+  titlesViaFor.push(projects[i].name);
+}
+
+// 2) forEach: also iterates, but typically used for side effects
+const titlesViaForEach: string[] = [];
+projects.forEach((project) => {
+  titlesViaForEach.push(project.name);
+});
+
+console.log("titlesViaFor", titlesViaFor);
+console.log("titlesViaForEach", titlesViaForEach);
 
 function App() {
   const active = getProjectsByStatus(projects, "active");
