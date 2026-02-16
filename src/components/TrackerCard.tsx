@@ -21,6 +21,11 @@ const trackerCards: TrackerCard[] = projects.map(
   },
 );
 
+const activeProjects: TrackerCard[] = trackerCards.filter((tracker) =>
+  tracker.status.includes("active"),
+);
+
+
 console.log("trackerCards", trackerCards);
 
 // Notice: original data is unchanged
@@ -29,12 +34,22 @@ console.log("original projects still intact", projects);
 function TrackerCard() {
   return (
     <section style={{ marginTop: 12 }}>
-      <h2>Active Projects</h2>
+      <h2>All Projects</h2>
       <ul>
         {trackerCards.map((trackerCard) => (
           <li key={trackerCard.id}>
             <strong>{trackerCard.heading}</strong> — Due: {trackerCard.dueDate}{" "}
             - Status: {trackerCard.status}
+          </li>
+        ))}
+      </ul>
+
+      <h2>Active Projects</h2>
+      <ul>
+        {activeProjects.map((project) => (
+          <li key={project.id}>
+            <strong>{project.heading}</strong> — Due: {project.dueDate}{" "}
+            - Status: {project.status}
           </li>
         ))}
       </ul>
