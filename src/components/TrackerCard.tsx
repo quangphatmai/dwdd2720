@@ -4,7 +4,7 @@ import type { Project } from "../models/project";
 type TrackerCard = {
   id: string;
   heading: string; // formatted title
-  isDone: boolean;
+  status: string;
   pointsLabel: string;
   dueDate: string;
 };
@@ -14,7 +14,7 @@ const trackerCards: TrackerCard[] = projects.map(
     return {
       id: project.id,
       heading: project.name.toUpperCase(),
-      isDone: project.status === "done",
+      status: project.status ?? "unknown",
       pointsLabel: "0 pts",
       dueDate: project.dueDate ?? "TBD",
     };
@@ -34,7 +34,7 @@ function TrackerCard() {
         {trackerCards.map((trackerCard) => (
           <li key={trackerCard.id}>
             <strong>{trackerCard.heading}</strong> — Due: {trackerCard.dueDate}{" "}
-            - Status {trackerCard.isDone ? "Done" : "Not Done"}
+            - Status: {trackerCard.status}
           </li>
         ))}
       </ul>
