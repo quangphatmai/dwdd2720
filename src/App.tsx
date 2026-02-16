@@ -154,10 +154,10 @@ function App() {
         <section style={{ marginTop: 12 }}>
           <h2>Active Projects</h2>
           <ul>
-            {active.map((p) => (
-              <li key={p.id}>
-                <strong>{p.name}</strong> — Due: {formatDueDate(p)} — Tags:{" "}
-                {p.tags.join(", ")}
+            {active.map((project) => (
+              <li key={project.id}>
+                <strong>{project.name}</strong> — Due: {formatDueDate(project)} — Tags:{" "}
+                {project.tags.join(", ")}
               </li>
             ))}
           </ul>
