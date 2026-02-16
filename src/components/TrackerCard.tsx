@@ -35,6 +35,24 @@ console.log("trackerCards", trackerCards);
 // Notice: original data is unchanged
 console.log("original projects still intact", projects);
 
+
+const blockedCards: TrackerCard[] = trackerCards
+  .filter((t) => t.status === "blocked")
+  .map((t) => ({
+    id: t.id,
+    heading: t.heading,
+    status: t.status,
+    pointsLabel: t.pointsLabel,
+    dueDate: t.dueDate,
+  }));
+
+const openPointsTotal: number = trackerCards
+  .filter((t) => t.status === "open")
+  .reduce((sum, t) => sum + (t.daysLeft ?? 0), 0);
+
+console.log("blockedCards", blockedCards);
+console.log("openPointsTotal", openPointsTotal);
+
 function TrackerCard() {
   return (
     <section style={{ marginTop: 12 }}>
