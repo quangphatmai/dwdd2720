@@ -9,4 +9,5 @@ export interface Project {
   estimateHours: number;
   /** Optional notes (can be missing) */
   notes?: string;
+  clientName: string;
 }

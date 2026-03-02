@@ -7,14 +7,16 @@ export const sampleProjects: ReadonlyArray<Project> = [
     owner: "Ava",
     status: "planned",
     estimateHours: 12,
-    notes: "Define screens and copy before implementation."
+    notes: "Define screens and copy before implementation.",
+    clientName: "Acme Corp"
   },
   {
     id: "p-1002",
     name: "Project Tracker Module",
     owner: "Noah",
     status: "active",
-    estimateHours: 6
+    estimateHours: 6,
+    clientName: "Acme Corp"
   },
     {
     id: "p-1003",
@@ -22,6 +24,7 @@ export const sampleProjects: ReadonlyArray<Project> = [
     owner: "Mia",
     status: "done",
     estimateHours: 2,
-    notes: "Validated on staging."
+    notes: "Validated on staging.",
+    clientName: "Acme Corp"
   }
 ];

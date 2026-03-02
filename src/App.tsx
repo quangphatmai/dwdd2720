@@ -4,7 +4,7 @@ import { trackerCard } from "./trackerBasics";
 import { useState } from "react";
 import "./index.css";
 import { projects } from "./data/projects";
-import { countByStatus } from "./utils/projectUtils";
+//import { countByStatus } from "./utils/projectUtils";
 import {
   projectRecords,
   statusLabelIf,
@@ -17,7 +17,8 @@ import "./trackerBasics.ts";
 import { sampleProjects, validateProject } from "./project-tracker";
 
 import HelperComponent from "./helpers/HelperComponent";
-import TrackerCard from "./components/TrackerCard.tsx"; 
+import TrackerCard from "./components/TrackerCard.tsx";
+import { ProjectDashboard } from "./components/ProjectDashboard.tsx";
 
 const records: ProjectRecord[] = [
   {
@@ -131,9 +132,9 @@ function App() {
           </div>
         </div>
       </div>
-
+      <ProjectDashboard projects={projects} />
       {/* Project Tracker Section */}
-      <main className="mx-auto max-w-2xl p-12 bg-slate-800 rounded-lg">
+      {/* <main className="mx-auto max-w-2xl p-12 bg-slate-800 rounded-lg">
         <h1 className="text-3xl font-bold mb-6 text-center">Project Tracker</h1>
 
         <section style={{ marginTop: 12 }}>
@@ -145,7 +146,7 @@ function App() {
             <li>Done: {countByStatus(projects, "done")}</li>
           </ul>
         </section>
-      </main>
+      </main> */}
       <TrackerCard />
       {/* <div className="p-4 max-w-2xl mx-auto bg-slate-800 rounded-lg mt-8">
         <pre>{lines.join("\n")}</pre>

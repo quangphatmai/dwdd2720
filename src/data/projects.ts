@@ -9,6 +9,7 @@ export const projects: Project[] = [
     tags: ["frontend", "ux"],
     notes: "Waiting on final copy from marketing.",
     days: 30,
+    clientName: "Acme Corp"
   },
   {
     id: "p-1002",
@@ -18,6 +19,7 @@ export const projects: Project[] = [
     tags: ["backend", "payments"],
     // dueDate is optional, so we can omit it for now
     days: 45,
+    clientName: "Globex Inc"
   },
   {
     id: "p-1003",
@@ -26,6 +28,7 @@ export const projects: Project[] = [
     dueDate: "2025-03-01",
     tags: ["devops"],
     days: 20,
+    clientName: "Initech"
   },
 ];
 
