@@ -30,6 +30,35 @@ export const projects: Project[] = [
     days: 20,
     clientName: "Initech"
   },
+  {
+    id: "p-1004",
+    name: "Mobile App Redesign",
+    status: "active",
+    dueDate: "2025-04-15",
+    tags: ["mobile", "design"],
+    notes: "Designs are in progress, expected by end of month.",
+    days: 60,
+    clientName: "Umbrella Corp"
+  },
+  {
+    id: "p-1005",
+    name: "API Documentation",
+    status: "planned",
+    dueDate: "2025-05-15",
+    tags: ["backend", "documentation"],
+    days: 15,
+    clientName: "Vandelay Industries"
+  },
+  {
+    id: "p-1006",
+    name: "Customer Support Chatbot",
+    status: "active",
+    dueDate: "2025-06-30",
+    tags: ["ai", "customer-support"],
+    notes: "Initial prototype is showing promising results.",
+    days: 90,
+    clientName: "Soylent Corp"
+  }
 ];
 
 // Try a deliberate mistake (then fix it):

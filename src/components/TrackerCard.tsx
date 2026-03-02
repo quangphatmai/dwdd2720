@@ -11,6 +11,26 @@ type TrackerCard = {
   daysLeft?: number; // optional because not all projects have a deadline
 };
 
+function getStatusChipClasses(status: string): string {
+  switch (status.toLowerCase()) {
+    case "active":
+      return "border-emerald-200 bg-emerald-50 text-emerald-700";
+    case "blocked":
+      return "border-rose-200 bg-rose-50 text-rose-700";
+    case "planned":
+      return "border-sky-200 bg-sky-50 text-sky-700";
+    case "done":
+    case "completed":
+      return "border-violet-200 bg-violet-50 text-violet-700";
+    case "draft":
+      return "border-amber-200 bg-amber-50 text-amber-700";
+    case "paused":
+      return "border-orange-200 bg-orange-50 text-orange-700";
+    default:
+      return "border-slate-200 bg-white text-slate-700";
+  }
+}
+
 const trackerCards: TrackerCard[] = projects.map(
   (project: Project): TrackerCard => {
     return {
@@ -68,23 +88,45 @@ console.log("Overdue as of 2025-12-31:", overdue.map((p) => p.id));
 
 function TrackerCard() {
   return (
-    <section style={{ marginTop: 12 }}>
-      <h2>All Projects</h2>
-      <ul>
+    <section className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 className="text-xl font-semibold text-slate-900">All Projects</h2>
+      <ul className="mt-4 space-y-2">
         {trackerCards.map((trackerCard) => (
-          <li key={trackerCard.id}>
-            <strong>{trackerCard.heading}</strong> — Due: {trackerCard.dueDate}{" "}
-            - Status: {trackerCard.status}
+          <li
+            key={trackerCard.id}
+            className="flex flex-col gap-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <span>
+              <strong className="text-slate-900">{trackerCard.heading}</strong> — Due: {trackerCard.dueDate}
+            </span>
+            <span
+              className={`inline-flex w-fit rounded-full border px-2 py-1 text-xs font-medium ${getStatusChipClasses(
+                trackerCard.status,
+              )}`}
+            >
+              Status: {trackerCard.status}
+            </span>
           </li>
         ))}
       </ul>
 
-      <h2>Active Projects</h2>
-      <ul>
+      <h2 className="mt-6 text-xl font-semibold text-slate-900">Active Projects</h2>
+      <ul className="mt-4 space-y-2">
         {activeProjects.map((project) => (
-          <li key={project.id}>
-            <strong>{project.heading}</strong> — Due: {project.dueDate}{" "}
-            - Status: {project.status}
+          <li
+            key={project.id}
+            className="flex flex-col gap-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <span>
+              <strong className="text-slate-900">{project.heading}</strong> — Due: {project.dueDate}
+            </span>
+            <span
+              className={`inline-flex w-fit rounded-full border px-2 py-1 text-xs font-medium ${getStatusChipClasses(
+                project.status,
+              )}`}
+            >
+              Status: {project.status}
+            </span>
           </li>
         ))}
       </ul>
