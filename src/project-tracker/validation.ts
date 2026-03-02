@@ -41,6 +41,7 @@ export function validateProject(value: unknown): { ok: true; project: Project } 
     owner: record.owner as string,
     status: record.status as ProjectStatus,
     estimateHours: record.estimateHours as number,
+    clientName: record.clientName as string,
     ...(record.notes !== undefined ? { notes: record.notes as string } : {})
   };
 
