@@ -90,8 +90,8 @@ projects.forEach((project) => {
   titlesViaForEach.push(project.name);
 });
 
-console.log("titlesViaFor", titlesViaFor);
-console.log("titlesViaForEach", titlesViaForEach);
+//console.log("titlesViaFor", titlesViaFor);
+//console.log("titlesViaForEach", titlesViaForEach);
 
 function App() {
   const [count, setCount] = useState(0);

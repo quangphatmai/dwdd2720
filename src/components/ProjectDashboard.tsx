@@ -1,9 +1,14 @@
-
 import { useEffect, useRef } from "react";
 import type { Project } from "../models/project";
 
 export type ProjectDashboardProps = {
   projects: Project[];
+};
+
+type ActiveCardSummary = {
+  id: string;
+  title: string;
+  status: string;
 };
 
 function getStatusChipClasses(status: string): string {
@@ -34,12 +39,29 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     const root = containerRef.current;
     if (!root) return;
 
-    const rowEls = root.querySelectorAll<HTMLElement>("[data-role='project-row']");
-    console.log("ProjectDashboard rows:", rowEls.length);
+    const cards = root.querySelectorAll<HTMLElement>("[data-project-card]");
+
+    const activeCards: ActiveCardSummary[] = [];
+
+    cards.forEach((card) => {
+      const status = card.getAttribute("data-status") ?? "";
+      if (status !== "active") return;
+
+      const id = card.getAttribute("data-project-id") ?? "(missing id)";
+      const title =
+        card.querySelector<HTMLElement>("[data-project-title]")
+          ?.textContent?.trim() ?? "(missing title)";
+
+      activeCards.push({ id, title, status });
+    });
+
+    console.table(activeCards);
   }, [props.projects]);
 
   function clearHighlights(root: HTMLElement) {
-    const highlighted = root.querySelectorAll<HTMLElement>("[data-role='project-row'].bg-amber-50");
+    const highlighted = root.querySelectorAll<HTMLElement>(
+      "[data-role='project-row'].bg-amber-50",
+    );
     highlighted.forEach((el) => {
       el.classList.remove("bg-amber-50", "ring-1", "ring-amber-300");
     });
@@ -49,7 +71,9 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     const root = containerRef.current;
     if (!root) return;
 
-    const rows = root.querySelectorAll<HTMLElement>("[data-role='project-row']");
+    const rows = root.querySelectorAll<HTMLElement>(
+      "[data-role='project-row']",
+    );
     const last = rows.item(rows.length - 1);
 
     if (!last) {
@@ -83,10 +107,11 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     row.classList.add("bg-amber-50", "ring-1", "ring-amber-300");
     row.scrollIntoView({ behavior: "smooth", block: "center" });
 
-    const detailsBtn = row.querySelector<HTMLButtonElement>("[data-role='details-button']");
+    const detailsBtn = row.querySelector<HTMLButtonElement>(
+      "[data-role='details-button']",
+    );
     detailsBtn?.focus();
   }
-
 
   return (
     <section
@@ -96,9 +121,12 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     >
       <header className="mb-4 flex flex-col gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Project Dashboard</h2>
+          <h2 className="text-xl font-semibold text-slate-900">
+            Project Dashboard
+          </h2>
           <p className="text-sm text-slate-600">
-            DOM selection demo. Loaded: <span className="font-medium">{props.projects.length}</span>
+            DOM selection demo. Loaded:{" "}
+            <span className="font-medium">{props.projects.length}</span>
           </p>
         </div>
 
@@ -127,19 +155,30 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
       </header>
 
       <div className="rounded-lg border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-3 text-sm font-medium text-slate-800">Projects</div>
+        <div className="border-b border-slate-200 px-4 py-3 text-sm font-medium text-slate-800">
+          Projects
+        </div>
 
         <ul data-role="project-list" className="divide-y divide-slate-100">
           {props.projects.map((p) => (
             <li
               key={p.id}
+              data-project-card
+              data-status={p.status}
               data-role="project-row"
               data-project-id={p.id}
               className="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-50"
             >
               <div className="min-w-0">
-                <div className="truncate text-sm font-semibold text-slate-900">{p.name}</div>
-                <div className="truncate text-xs text-slate-600">Client: {p.clientName}</div>
+                <div
+                  data-project-title
+                  className="truncate text-sm font-semibold text-slate-900"
+                >
+                  {p.name}
+                </div>
+                <div className="truncate text-xs text-slate-600">
+                  Client: {p.clientName}
+                </div>
               </div>
 
               <div
