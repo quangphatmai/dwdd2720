@@ -31,14 +31,49 @@ function getStatusChipClasses(status: string): string {
   }
 }
 
+function formatStatusLabel(status: string): string {
+  if (!status) return "";
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+}
+
 export function ProjectDashboard(props: ProjectDashboardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const idInputRef = useRef<HTMLInputElement | null>(null);
+  const cardRefs = useRef<(HTMLLIElement | null)[]>([]);
+
+  const highlightClasses = ["bg-amber-50", "ring-2", "ring-amber-300"];
 
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
 
+    // root.replaceChildren(); // Clear existing content for demo purposes
+
+    // const card = document.createElement("article");
+    // card.className =
+    //   "rounded-xl border border-slate-200 bg-white p-4 shadow-sm";
+    // card.setAttribute("data-testid", "project-card");
+
+    // const title = document.createElement("h3");
+    // title.className = "text-base font-semibold text-slate-900";
+    // title.textContent = `Example card: ${props.projects[0]?.name ?? "(no project)"}`;
+
+    // const demoCards = root.querySelectorAll<HTMLElement>("[data-project-card]");
+
+    // demoCards.forEach(() => {
+    //   const newCard = document.createElement("div")
+    //   const newCardText = document.createElement("p");
+    //   newCardText.className = "text-sm text-slate-700";
+    //   newCardText.textContent = "This card was created by DOM manipulation in useEffect. It won't persist if the component re-renders.";
+    //   newCard.append(newCardText);
+    //   root.append(newCard);
+    // });
+
+    // card.append(title);
+    // root.append(card);
+
+
+    // Leave this section alone
     const cards = root.querySelectorAll<HTMLElement>("[data-project-card]");
 
     const activeCards: ActiveCardSummary[] = [];
@@ -49,7 +84,8 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
 
       const id = card.getAttribute("data-project-id") ?? "(missing id)";
       const title =
-        card.querySelector<HTMLElement>("[data-project-title]")
+        card
+          .querySelector<HTMLElement>("[data-project-title]")
           ?.textContent?.trim() ?? "(missing title)";
 
       activeCards.push({ id, title, status });
@@ -58,13 +94,30 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     console.table(activeCards);
   }, [props.projects]);
 
+  useEffect(() => {
+    cardRefs.current = cardRefs.current.slice(0, props.projects.length);
+  }, [props.projects.length]);
+
   function clearHighlights(root: HTMLElement) {
     const highlighted = root.querySelectorAll<HTMLElement>(
       "[data-role='project-row'].bg-amber-50",
     );
     highlighted.forEach((el) => {
-      el.classList.remove("bg-amber-50", "ring-1", "ring-amber-300");
+      el.classList.remove("bg-amber-50", "ring-1", "ring-2", "ring-amber-300");
+      el.setAttribute("data-highlighted", "false");
     });
+  }
+
+  function toggleHighlight(index: number): void {
+    const cardEl = cardRefs.current[index];
+    if (!cardEl) return;
+
+    // Toggle each class in our highlight set
+    highlightClasses.forEach((c) => cardEl.classList.toggle(c));
+
+    // Decide the final state by checking ONE class
+    const isHighlighted = cardEl.classList.contains("ring-2");
+    cardEl.setAttribute("data-highlighted", String(isHighlighted));
   }
 
   function handleScrollToLast(): void {
@@ -160,36 +213,45 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
         </div>
 
         <ul data-role="project-list" className="divide-y divide-slate-100">
-          {props.projects.map((p) => (
-            <li
-              key={p.id}
-              data-project-card
-              data-status={p.status}
-              data-role="project-row"
-              data-project-id={p.id}
-              className="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-50"
-            >
-              <div className="min-w-0">
-                <div
-                  data-project-title
-                  className="truncate text-sm font-semibold text-slate-900"
-                >
-                  {p.name}
-                </div>
-                <div className="truncate text-xs text-slate-600">
-                  Client: {p.clientName}
-                </div>
-              </div>
-
-              <div
-                className={`shrink-0 rounded-full border px-2 py-1 text-xs font-medium ${getStatusChipClasses(
-                  p.status,
-                )}`}
+          {props.projects.map((p, i) => {
+            return (
+              <li
+                key={p.id}
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+                onClick={() => {
+                  toggleHighlight(i);
+                }}
+                data-project-card
+                data-status={p.status}
+                data-role="project-row"
+                data-project-id={p.id}
+                data-highlighted="false"
+                className="flex cursor-pointer items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-50"
               >
-                Status: {p.status}
-              </div>
-            </li>
-          ))}
+                <div className="min-w-0">
+                  <div
+                    data-project-title
+                    className="truncate text-sm font-semibold text-slate-900"
+                  >
+                    {p.name}
+                  </div>
+                  <div className="truncate text-xs text-slate-600">
+                    Client: {p.clientName}
+                  </div>
+                </div>
+
+                <div
+                  className={`shrink-0 rounded-full border px-2 py-1 text-xs font-medium ${getStatusChipClasses(
+                    p.status,
+                  )}`}
+                >
+                  {formatStatusLabel(p.status)}
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>

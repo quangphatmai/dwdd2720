@@ -31,6 +31,11 @@ function getStatusChipClasses(status: string): string {
   }
 }
 
+function formatStatusLabel(status: string): string {
+  if (!status) return "";
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+}
+
 const trackerCards: TrackerCard[] = projects.map(
   (project: Project): TrackerCard => {
     return {
@@ -104,7 +109,7 @@ function TrackerCard() {
                 trackerCard.status,
               )}`}
             >
-              Status: {trackerCard.status}
+              {formatStatusLabel(trackerCard.status)}
             </span>
           </li>
         ))}
@@ -125,7 +130,7 @@ function TrackerCard() {
                 project.status,
               )}`}
             >
-              Status: {project.status}
+              {formatStatusLabel(project.status)}
             </span>
           </li>
         ))}

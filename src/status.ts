@@ -208,7 +208,9 @@ function getNextAction(p: Project): NextAction {
 
 function getStatusLabel(p: Project): string {
   // Simple mapping based on one condition
-  return p.status === "blocked" ? "Blocked (needs attention)" : `Status: ${p.status}`;
+  return p.status === "blocked"
+    ? "Blocked (needs attention)"
+    : p.status.charAt(0).toUpperCase() + p.status.slice(1).toLowerCase();
 }
 
 function shouldShowWarning(p: Project): boolean {
