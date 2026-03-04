@@ -1,159 +1,151 @@
-// src/App.tsx
-
-import { trackerCard } from "./trackerBasics";
-import { useState } from "react";
-import "./index.css";
-import { projects } from "./data/projects";
-//import { countByStatus } from "./utils/projectUtils";
+import { useEffect, useState } from "react";
 import {
-  projectRecords,
-  statusLabelIf,
-  statusLabelSwitch,
-  canEditProject,
-} from "./status";
-import { normalizeStatus } from "./status";
-import { formatProjectRecord, type ProjectRecord } from "./status";
-import "./trackerBasics.ts";
-import { sampleProjects, validateProject } from "./project-tracker";
+  NavLink,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import HelpersPage from "./pages/HelpersPage";
+import HomePage from "./pages/HomePage";
+import ProjectPage from "./pages/ProjectPage";
+import TrackerPage from "./pages/TrackerPage";
 
-import HelperComponent from "./helpers/HelperComponent";
-import TrackerCard from "./components/TrackerCard.tsx";
-import { ProjectDashboard } from "./components/ProjectDashboard.tsx";
-
-const records: ProjectRecord[] = [
-  {
-    id: "p10",
-    name: "Brand Refresh",
-    status: "draft",
-    lastEditedAt: "2025-12-31",
-  },
-  { id: "p11", name: "Client Portal", status: "active", etaDays: 14 },
-  {
-    id: "p12",
-    name: "SEO Audit",
-    status: "paused",
-    pauseReason: "Waiting on content",
-  },
-  {
-    id: "p13",
-    name: "Landing Page",
-    status: "completed",
-    completedAt: "2025-12-15",
-  },
+const navItems = [
+  { to: "/", label: "Home" },
+  { to: "/projects", label: "Projects" },
+  { to: "/tracker", label: "Tracker" },
+  { to: "/helpers", label: "Helpers" },
 ];
 
-const lines = [
-  `Project: ${projectRecords[0].name}`,
-  `Status (if): ${statusLabelIf(projectRecords[0].status)}`,
-  `Status (switch): ${statusLabelSwitch(projectRecords[0].status)}`,
-  `Can edit? ${canEditProject(projectRecords[0].status)}`,
-];
+function getPageLabel(pathname: string): string {
+  const item = navItems.find((entry) =>
+    entry.to === "/" ? pathname === "/" : pathname.startsWith(entry.to),
+  );
 
-console.log(lines.join("\n"));
-
-lines.push(`Normalize " paused ": ${normalizeStatus(" paused ")}`);
-lines.push(`Normalize "ARCHIVED": ${normalizeStatus("ARCHIVED")}`);
-lines.push(`Normalize null: ${normalizeStatus(null)}`);
-
-for (const r of records) {
-  lines.push(formatProjectRecord(r));
+  return item?.label ?? "Home";
 }
 
-console.log("--- Validating sampleProjects ---");
-for (const p of sampleProjects) {
-  const result = validateProject(p);
-  console.log(p.id, result.ok ? "OK" : result);
+type Theme = "light" | "dark";
+
+function getInitialTheme(): Theme {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+
+  const stored = window.localStorage.getItem("project-tracker-theme");
+  if (stored === "light" || stored === "dark") {
+    return stored;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
-console.log("--- Validating intentionally bad input ---");
-const badInput: unknown = {
-  id: "", // invalid
-  name: "  ", // invalid
-  owner: 42, // invalid type
-  status: "in-progress", // not allowed
-  estimateHours: -5, // invalid
-  notes: "", // invalid when provided
-};
-
-const badResult = validateProject(badInput);
-console.log(badResult);
-
-// 1) for-loop: build a list of titles
-const titlesViaFor: string[] = [];
-for (let i = 0; i < projects.length; i++) {
-  titlesViaFor.push(projects[i].name);
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
+      <path
+        d="M12 3v2.25M12 18.75V21M4.72 4.72l1.6 1.6M17.68 17.68l1.6 1.6M3 12h2.25M18.75 12H21M4.72 19.28l1.6-1.6M17.68 6.32l1.6-1.6M15.75 12A3.75 3.75 0 1 1 8.25 12a3.75 3.75 0 0 1 7.5 0Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
-// 2) forEach: also iterates, but typically used for side effects
-const titlesViaForEach: string[] = [];
-projects.forEach((project) => {
-  titlesViaForEach.push(project.name);
-});
-
-//console.log("titlesViaFor", titlesViaFor);
-//console.log("titlesViaForEach", titlesViaForEach);
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
+      <path
+        d="M21 12.79A9 9 0 1 1 11.21 3c.34 0 .67.02 1 .06A7 7 0 0 0 21 12.79Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function App() {
-  const [count, setCount] = useState(0);
+  const location = useLocation();
+  const pageLabel = getPageLabel(location.pathname);
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
-  const handleIncrement = (): void => {
-    setCount(count + 1);
-  };
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+    window.localStorage.setItem("project-tracker-theme", theme);
+  }, [theme]);
 
-  console.log("Tracker Card Info:", trackerCard);
+  function handleThemeToggle(): void {
+    setTheme((currentTheme) => (currentTheme === "light" ? "dark" : "light"));
+  }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h1 className="text-2xl font-bold text-slate-900">
-            My First Vite + TypeScript + Tailwind App
-          </h1>
-          <p className="mt-2 text-sm text-slate-600">
-            This tiny feature proves your dev environment is ready for the
-            client project. Click the button to increment the counter.
+    <div className="app-shell">
+      <header className="app-header">
+        <nav className="app-nav-wrap flex flex-wrap items-center justify-between gap-3 px-4 py-4">
+          <p className="app-brand text-sm font-semibold">
+            Project Tracker Workspace
           </p>
-          <p className="mt-1 text-sm text-slate-500">
-            Testing GitHub + Vercel deployment
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <ul className="flex flex-wrap items-center gap-2">
+              {navItems.map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    end={item.to === "/"}
+                    className={({ isActive }) =>
+                      [
+                        "btn-base",
+                        isActive
+                          ? "btn-primary"
+                          : "btn-ghost",
+                      ].join(" ")
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
 
-          <div className="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-6xl font-semibold tracking-tight text-slate-800">
-              {count}
-            </div>
             <button
               type="button"
-              onClick={handleIncrement}
-              className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              onClick={handleThemeToggle}
+              className="btn-base btn-ghost gap-2"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             >
-              Increment
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+              <span className="hidden sm:inline">
+                {theme === "dark" ? "Light" : "Dark"}
+              </span>
             </button>
           </div>
+        </nav>
+      </header>
+
+      <main className="page-container">
+        <section className="card px-5 py-4 sm:px-6">
+          <h1 className="title-lg">{pageLabel}</h1>
+          <p className="mt-1 text-sm text-muted">Focused workspace view</p>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white px-6 py-4 text-sm text-slate-700 shadow-sm">
-          <HelperComponent />
-        </section>
-
-        <ProjectDashboard projects={projects} />
-      {/* Project Tracker Section */}
-      {/* <main className="mx-auto max-w-2xl p-12 bg-slate-800 rounded-lg">
-        <h1 className="text-3xl font-bold mb-6 text-center">Project Tracker</h1>
-
-        <section style={{ marginTop: 12 }}>
-          <h2 className="font-bold mb-4">Summary</h2>
-          <ul>
-            <li>Planned: {countByStatus(projects, "planned")}</li>
-            <li>Active: {countByStatus(projects, "active")}</li>
-            <li>Blocked: {countByStatus(projects, "blocked")}</li>
-            <li>Done: {countByStatus(projects, "done")}</li>
-          </ul>
-        </section>
-      </main> */}
-        <TrackerCard />
-      {/* <div className="p-4 max-w-2xl mx-auto bg-slate-800 rounded-lg mt-8">
-        <pre>{lines.join("\n")}</pre>
-      </div> */}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/projects" element={<ProjectPage />} />
+          <Route path="/tracker" element={<TrackerPage />} />
+          <Route path="/helpers" element={<HelpersPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
     </div>
   );

@@ -14,20 +14,20 @@ type TrackerCard = {
 function getStatusChipClasses(status: string): string {
   switch (status.toLowerCase()) {
     case "active":
-      return "border-emerald-200 bg-emerald-50 text-emerald-700";
+      return "status-badge status-active";
     case "blocked":
-      return "border-rose-200 bg-rose-50 text-rose-700";
+      return "status-badge status-blocked";
     case "planned":
-      return "border-sky-200 bg-sky-50 text-sky-700";
+      return "status-badge status-planned";
     case "done":
     case "completed":
-      return "border-violet-200 bg-violet-50 text-violet-700";
+      return "status-badge status-done";
     case "draft":
-      return "border-amber-200 bg-amber-50 text-amber-700";
+      return "status-badge status-draft";
     case "paused":
-      return "border-orange-200 bg-orange-50 text-orange-700";
+      return "status-badge status-paused";
     default:
-      return "border-slate-200 bg-white text-slate-700";
+      return "status-badge status-default";
   }
 }
 
@@ -93,48 +93,60 @@ console.log("Overdue as of 2025-12-31:", overdue.map((p) => p.id));
 
 function TrackerCard() {
   return (
-    <section className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">All Projects</h2>
-      <ul className="mt-4 space-y-2">
-        {trackerCards.map((trackerCard) => (
-          <li
-            key={trackerCard.id}
-            className="flex flex-col gap-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <span>
-              <strong className="text-slate-900">{trackerCard.heading}</strong> — Due: {trackerCard.dueDate}
-            </span>
-            <span
-              className={`inline-flex w-fit rounded-full border px-2 py-1 text-xs font-medium ${getStatusChipClasses(
-                trackerCard.status,
-              )}`}
-            >
-              {formatStatusLabel(trackerCard.status)}
-            </span>
-          </li>
-        ))}
-      </ul>
+    <section className="card w-full p-6">
+      <div className="mb-6">
+        <h2 className="title-md">All Projects</h2>
+        <p className="mt-1 text-sm text-muted">Snapshot of tracked work and due dates.</p>
+      </div>
 
-      <h2 className="mt-6 text-xl font-semibold text-slate-900">Active Projects</h2>
-      <ul className="mt-4 space-y-2">
-        {activeProjects.map((project) => (
-          <li
-            key={project.id}
-            className="flex flex-col gap-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <span>
-              <strong className="text-slate-900">{project.heading}</strong> — Due: {project.dueDate}
-            </span>
-            <span
-              className={`inline-flex w-fit rounded-full border px-2 py-1 text-xs font-medium ${getStatusChipClasses(
-                project.status,
-              )}`}
+      {trackerCards.length === 0 ? (
+        <div className="empty-state px-4 py-8 text-center text-sm">
+          No projects available yet.
+        </div>
+      ) : (
+        <ul className="space-y-2.5">
+          {trackerCards.map((trackerCard) => (
+            <li
+              key={trackerCard.id}
+              className="card-soft flex flex-col gap-1 px-4 py-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
             >
-              {formatStatusLabel(project.status)}
-            </span>
-          </li>
-        ))}
-      </ul>
+              <span>
+                <strong className="text-(--text-primary)">{trackerCard.heading}</strong> — Due: {trackerCard.dueDate}
+              </span>
+              <span className={getStatusChipClasses(trackerCard.status)}>
+                {formatStatusLabel(trackerCard.status)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="mt-7 mb-4 flex items-center justify-between gap-3">
+        <h2 className="title-md">Active Projects</h2>
+        <span className="status-badge status-active">{activeProjects.length} active</span>
+      </div>
+
+      {activeProjects.length === 0 ? (
+        <div className="empty-state px-4 py-8 text-center text-sm">
+          No active projects right now.
+        </div>
+      ) : (
+        <ul className="space-y-2.5">
+          {activeProjects.map((project) => (
+            <li
+              key={project.id}
+              className="card-soft flex flex-col gap-1 px-4 py-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
+            >
+              <span>
+                <strong className="text-(--text-primary)">{project.heading}</strong> — Due: {project.dueDate}
+              </span>
+              <span className={getStatusChipClasses(project.status)}>
+                {formatStatusLabel(project.status)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }

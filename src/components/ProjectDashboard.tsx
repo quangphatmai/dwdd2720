@@ -14,20 +14,20 @@ type ActiveCardSummary = {
 function getStatusChipClasses(status: string): string {
   switch (status.toLowerCase()) {
     case "active":
-      return "border-emerald-200 bg-emerald-50 text-emerald-700";
+      return "status-badge status-active";
     case "blocked":
-      return "border-rose-200 bg-rose-50 text-rose-700";
+      return "status-badge status-blocked";
     case "planned":
-      return "border-sky-200 bg-sky-50 text-sky-700";
+      return "status-badge status-planned";
     case "done":
     case "completed":
-      return "border-violet-200 bg-violet-50 text-violet-700";
+      return "status-badge status-done";
     case "draft":
-      return "border-amber-200 bg-amber-50 text-amber-700";
+      return "status-badge status-draft";
     case "paused":
-      return "border-orange-200 bg-orange-50 text-orange-700";
+      return "status-badge status-paused";
     default:
-      return "border-slate-200 bg-slate-50 text-slate-700";
+      return "status-badge status-default";
   }
 }
 
@@ -41,7 +41,7 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
   const idInputRef = useRef<HTMLInputElement | null>(null);
   const cardRefs = useRef<(HTMLLIElement | null)[]>([]);
 
-  const highlightClasses = ["bg-amber-50", "ring-2", "ring-amber-300"];
+  const highlightClasses = ["row-highlight"];
 
   useEffect(() => {
     const root = containerRef.current;
@@ -100,10 +100,10 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
 
   function clearHighlights(root: HTMLElement) {
     const highlighted = root.querySelectorAll<HTMLElement>(
-      "[data-role='project-row'].bg-amber-50",
+      "[data-role='project-row'].row-highlight",
     );
     highlighted.forEach((el) => {
-      el.classList.remove("bg-amber-50", "ring-1", "ring-2", "ring-amber-300");
+      el.classList.remove("row-highlight");
       el.setAttribute("data-highlighted", "false");
     });
   }
@@ -116,7 +116,7 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     highlightClasses.forEach((c) => cardEl.classList.toggle(c));
 
     // Decide the final state by checking ONE class
-    const isHighlighted = cardEl.classList.contains("ring-2");
+    const isHighlighted = cardEl.classList.contains("row-highlight");
     cardEl.setAttribute("data-highlighted", String(isHighlighted));
   }
 
@@ -135,7 +135,7 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     }
 
     clearHighlights(root);
-    last.classList.add("bg-amber-50", "ring-1", "ring-amber-300");
+    last.classList.add("row-highlight");
 
     last.scrollIntoView({ behavior: "smooth", block: "center" });
   }
@@ -157,7 +157,7 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     }
 
     clearHighlights(root);
-    row.classList.add("bg-amber-50", "ring-1", "ring-amber-300");
+    row.classList.add("row-highlight");
     row.scrollIntoView({ behavior: "smooth", block: "center" });
 
     const detailsBtn = row.querySelector<HTMLButtonElement>(
@@ -169,15 +169,15 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
   return (
     <section
       ref={containerRef}
-      className="w-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+      className="card w-full p-5 sm:p-6"
       aria-label="Project dashboard"
     >
-      <header className="mb-4 flex flex-col gap-4">
+      <header className="mb-5 flex flex-col gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">
+          <h2 className="title-md">
             Project Dashboard
           </h2>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted">
             DOM selection demo. Loaded:{" "}
             <span className="font-medium">{props.projects.length}</span>
           </p>
@@ -188,71 +188,70 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
             ref={idInputRef}
             type="text"
             placeholder="Enter project id (example: p-1001)"
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:max-w-xs"
+            className="input-base sm:max-w-xs"
           />
           <button
             type="button"
             onClick={handleFindById}
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="btn-base btn-primary"
           >
             Find & focus
           </button>
           <button
             type="button"
             onClick={handleScrollToLast}
-            className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className="btn-base btn-secondary"
           >
             Scroll to last project
           </button>
         </div>
       </header>
 
-      <div className="rounded-lg border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-3 text-sm font-medium text-slate-800">
+      <div className="list-shell">
+        <div className="list-header px-4 py-3 text-sm font-medium">
           Projects
         </div>
 
-        <ul data-role="project-list" className="divide-y divide-slate-100">
-          {props.projects.map((p, i) => {
-            return (
-              <li
-                key={p.id}
-                ref={(el) => {
-                  cardRefs.current[i] = el;
-                }}
-                onClick={() => {
-                  toggleHighlight(i);
-                }}
-                data-project-card
-                data-status={p.status}
-                data-role="project-row"
-                data-project-id={p.id}
-                data-highlighted="false"
-                className="flex cursor-pointer items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-50"
-              >
-                <div className="min-w-0">
-                  <div
-                    data-project-title
-                    className="truncate text-sm font-semibold text-slate-900"
-                  >
-                    {p.name}
-                  </div>
-                  <div className="truncate text-xs text-slate-600">
-                    Client: {p.clientName}
-                  </div>
-                </div>
-
-                <div
-                  className={`shrink-0 rounded-full border px-2 py-1 text-xs font-medium ${getStatusChipClasses(
-                    p.status,
-                  )}`}
+        {props.projects.length === 0 ? (
+          <div className="empty-state m-4 px-4 py-8 text-center text-sm">
+            No projects yet. Add a project to populate your dashboard.
+          </div>
+        ) : (
+          <ul data-role="project-list" className="divide-y divide-(--border-color)">
+            {props.projects.map((p, i) => {
+              return (
+                <li
+                  key={p.id}
+                  ref={(el) => {
+                    cardRefs.current[i] = el;
+                  }}
+                  onClick={() => {
+                    toggleHighlight(i);
+                  }}
+                  data-project-card
+                  data-status={p.status}
+                  data-role="project-row"
+                  data-project-id={p.id}
+                  data-highlighted="false"
+                  className="list-row flex cursor-pointer items-center justify-between gap-3 px-4 py-3.5"
                 >
-                  {formatStatusLabel(p.status)}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                  <div className="min-w-0">
+                    <div data-project-title className="truncate text-sm font-semibold text-(--text-primary)">
+                      {p.name}
+                    </div>
+                    <div className="truncate text-xs text-muted">
+                      Client: {p.clientName}
+                    </div>
+                  </div>
+
+                  <div className={`shrink-0 ${getStatusChipClasses(p.status)}`}>
+                    {formatStatusLabel(p.status)}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </section>
   );
