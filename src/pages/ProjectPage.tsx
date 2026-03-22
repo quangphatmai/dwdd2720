@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ProjectDashboard } from "../components/ProjectDashboard";
 import { projects } from "../data/projects";
 import type { ProjectStatus } from "../models/project";
@@ -7,6 +7,9 @@ type StatusFilter = ProjectStatus | "all";
 
 export default function ProjectPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null,
+  );
 
   console.log("Current status filter:", statusFilter);
 
@@ -14,6 +17,25 @@ export default function ProjectPage() {
     statusFilter === "all"
       ? projects
       : projects.filter((p) => p.status === statusFilter);
+
+  const selectedProject = useMemo(() => {
+    if (!selectedProjectId) return undefined;
+    return projects.find((p) => p.id === selectedProjectId);
+  }, [selectedProjectId]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedProjectId(null);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
 
   return (
     <div>
@@ -65,11 +87,29 @@ export default function ProjectPage() {
           </button>
         </div>
       </div>
-      <ProjectDashboard projects={visibleProjects} />
+      <ProjectDashboard
+        projects={visibleProjects}
+        selectedProjectId={selectedProjectId}
+        onProjectClick={(id) => {
+          setSelectedProjectId(id);
+        }}
+      />
       <p className="mt-4 text-sm text-slate-600">
         Showing <span className="font-medium">{visibleProjects.length}</span> of{" "}
         <span className="font-medium">{projects.length}</span> projects
       </p>
+      {selectedProject ? (
+        <div className="mt-2">
+          <div className="text-base font-medium text-gray-900">
+            {selectedProject.name}
+          </div>
+          <div className="mt-1 text-sm font-mono text-gray-600">
+            id: {selectedProject.id}
+          </div>
+        </div>
+      ) : (
+        <p className="mt-2 text-sm text-gray-600">No project selected.</p>
+      )}
     </div>
   );
 }

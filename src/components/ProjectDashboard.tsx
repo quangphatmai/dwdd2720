@@ -3,6 +3,8 @@ import type { Project } from "../models/project";
 
 export type ProjectDashboardProps = {
   projects: Project[];
+  selectedProjectId?: string | null;
+  onProjectClick?: (id: string) => void;
 };
 
 type ActiveCardSummary = {
@@ -39,41 +41,10 @@ function formatStatusLabel(status: string): string {
 export function ProjectDashboard(props: ProjectDashboardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const idInputRef = useRef<HTMLInputElement | null>(null);
-  const cardRefs = useRef<(HTMLLIElement | null)[]>([]);
-
-  const highlightClasses = ["row-highlight"];
 
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
-
-    // root.replaceChildren(); // Clear existing content for demo purposes
-
-    // const card = document.createElement("article");
-    // card.className =
-    //   "rounded-xl border border-slate-200 bg-white p-4 shadow-sm";
-    // card.setAttribute("data-testid", "project-card");
-
-    // const title = document.createElement("h3");
-    // title.className = "text-base font-semibold text-slate-900";
-    // title.textContent = `Example card: ${props.projects[0]?.name ?? "(no project)"}`;
-
-    // const demoCards = root.querySelectorAll<HTMLElement>("[data-project-card]");
-
-    // demoCards.forEach(() => {
-    //   const newCard = document.createElement("div")
-    //   const newCardText = document.createElement("p");
-    //   newCardText.className = "text-sm text-slate-700";
-    //   newCardText.textContent = "This card was created by DOM manipulation in useEffect. It won't persist if the component re-renders.";
-    //   newCard.append(newCardText);
-    //   root.append(newCard);
-    // });
-
-    // card.append(title);
-    // root.append(card);
-
-
-    // Leave this section alone
     const cards = root.querySelectorAll<HTMLElement>("[data-project-card]");
 
     const activeCards: ActiveCardSummary[] = [];
@@ -94,48 +65,23 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     console.table(activeCards);
   }, [props.projects]);
 
-  useEffect(() => {
-    cardRefs.current = cardRefs.current.slice(0, props.projects.length);
-  }, [props.projects.length]);
-
-  function clearHighlights(root: HTMLElement) {
-    const highlighted = root.querySelectorAll<HTMLElement>(
-      "[data-role='project-row'].row-highlight",
-    );
-    highlighted.forEach((el) => {
-      el.classList.remove("row-highlight");
-      el.setAttribute("data-highlighted", "false");
-    });
-  }
-
-  function toggleHighlight(index: number): void {
-    const cardEl = cardRefs.current[index];
-    if (!cardEl) return;
-
-    // Toggle each class in our highlight set
-    highlightClasses.forEach((c) => cardEl.classList.toggle(c));
-
-    // Decide the final state by checking ONE class
-    const isHighlighted = cardEl.classList.contains("row-highlight");
-    cardEl.setAttribute("data-highlighted", String(isHighlighted));
-  }
-
   function handleScrollToLast(): void {
     const root = containerRef.current;
     if (!root) return;
 
-    const rows = root.querySelectorAll<HTMLElement>(
-      "[data-role='project-row']",
-    );
-    const last = rows.item(rows.length - 1);
+    const lastProject = props.projects[props.projects.length - 1];
 
-    if (!last) {
+    if (!lastProject) {
       console.warn("No rows found to scroll to.");
       return;
     }
 
-    clearHighlights(root);
-    last.classList.add("row-highlight");
+    props.onProjectClick?.(lastProject.id);
+
+    const last = root.querySelector<HTMLElement>(
+      `[data-project-id='${lastProject.id}']`,
+    );
+    if (!last) return;
 
     last.scrollIntoView({ behavior: "smooth", block: "center" });
   }
@@ -156,8 +102,7 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
       return;
     }
 
-    clearHighlights(root);
-    row.classList.add("row-highlight");
+    props.onProjectClick?.(id);
     row.scrollIntoView({ behavior: "smooth", block: "center" });
 
     const detailsBtn = row.querySelector<HTMLButtonElement>(
@@ -218,22 +163,24 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
           </div>
         ) : (
           <ul data-role="project-list" className="divide-y divide-(--border-color)">
-            {props.projects.map((p, i) => {
+            {props.projects.map((p) => {
+              const isSelected = p.id === props.selectedProjectId;
+
               return (
                 <li
                   key={p.id}
-                  ref={(el) => {
-                    cardRefs.current[i] = el;
-                  }}
                   onClick={() => {
-                    toggleHighlight(i);
+                    props.onProjectClick?.(p.id);
                   }}
                   data-project-card
                   data-status={p.status}
                   data-role="project-row"
                   data-project-id={p.id}
-                  data-highlighted="false"
-                  className="list-row flex cursor-pointer items-center justify-between gap-3 px-4 py-3.5"
+                  data-highlighted={String(isSelected)}
+                  className={[
+                    "list-row flex cursor-pointer items-center justify-between gap-3 px-4 py-3.5",
+                    isSelected ? "row-highlight" : "",
+                  ].join(" ")}
                 >
                   <div className="min-w-0">
                     <div data-project-title className="truncate text-sm font-semibold text-(--text-primary)">
