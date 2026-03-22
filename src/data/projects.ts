@@ -58,6 +58,33 @@ export const projects: Project[] = [
     notes: "Initial prototype is showing promising results.",
     days: 90,
     clientName: "Soylent Corp"
+  },
+  {
+    id: "p-1007",
+    name: "Data Migration to Cloud",
+    status: "completed",
+    dueDate: "2025-07-31",
+    tags: ["cloud", "data"],
+    days: 120,
+    clientName: "Stark Industries"
+  },
+  {
+    id: "p-1008",
+    name: "Internal HR Portal",
+    status: "done",
+    dueDate: "2025-08-15",
+    tags: ["internal", "hr"],
+    days: 25,
+    clientName: "Wayne Enterprises"
+  },
+  {
+    id: "p-1009",
+    name: "E-commerce Platform Launch",
+    status: "draft", 
+    dueDate: "2025-09-30",
+    tags: ["e-commerce", "launch"],
+    days: 180,
+    clientName: "Hooli"
   }
 ];
 

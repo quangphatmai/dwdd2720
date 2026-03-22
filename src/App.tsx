@@ -4,7 +4,6 @@ import {
   Navigate,
   Route,
   Routes,
-  useLocation,
 } from "react-router-dom";
 import HelpersPage from "./pages/HelpersPage";
 import HomePage from "./pages/HomePage";
@@ -17,14 +16,6 @@ const navItems = [
   { to: "/tracker", label: "Tracker" },
   { to: "/helpers", label: "Helpers" },
 ];
-
-function getPageLabel(pathname: string): string {
-  const item = navItems.find((entry) =>
-    entry.to === "/" ? pathname === "/" : pathname.startsWith(entry.to),
-  );
-
-  return item?.label ?? "Home";
-}
 
 type Theme = "light" | "dark";
 
@@ -74,8 +65,6 @@ function MoonIcon() {
 }
 
 function App() {
-  const location = useLocation();
-  const pageLabel = getPageLabel(location.pathname);
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   useEffect(() => {
@@ -134,11 +123,6 @@ function App() {
       </header>
 
       <main className="page-container">
-        <section className="card px-5 py-4 sm:px-6">
-          <h1 className="title-lg">{pageLabel}</h1>
-          <p className="mt-1 text-sm text-muted">Focused workspace view</p>
-        </section>
-
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/projects" element={<ProjectPage />} />
