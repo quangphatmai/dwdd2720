@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect } from "react";
 import { ProjectDashboard } from "../components/ProjectDashboard";
 import { projects as initialProjects } from "../data/projects";
-import type { Project, ProjectStatus } from "../models/project";
+import type { Project, StatusFilter } from "../models/project";
 import { AddProjectForm } from "../components/AddProjectForm";
-
-type StatusFilter = ProjectStatus | "all";
+import { ProjectFilterBar } from "../components/ProjectFilterBar";
+import { ProjectDetailPanel } from "../components/ProjectDetailPanel";
 
 export default function ProjectPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -42,6 +42,15 @@ export default function ProjectPage() {
     setSelectedProjectId(project.id);
   }
 
+  function handleDeleteProject(id: string) {
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+
+    // Keep selection valid if the selected project was deleted.
+    setSelectedProjectId((prevSelected) =>
+      prevSelected === id ? null : prevSelected,
+    );
+  }
+
   return (
     <div>
       <div className="mb-6">
@@ -64,23 +73,12 @@ export default function ProjectPage() {
             Status
           </label>
 
-          <select
-            id="statusFilter"
-            className="h-10 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 font-medium hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 cursor-pointer transition-all"
+          <ProjectFilterBar
             value={statusFilter}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-              setStatusFilter(e.target.value as StatusFilter);
-            }}
-          >
-            <option value="all">All</option>
-            <option value="active">Active</option>
-            <option value="completed">Completed</option>
-            <option value="done">Done</option>
-            <option value="planned">Planned</option>
-            <option value="blocked">Blocked</option>
-            <option value="draft">Draft</option>
-            <option value="paused">Paused</option>
-          </select>
+            count={filteredProjects.length}
+            onChange={setStatusFilter}
+          />
+
           <button
             type="button"
             className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-800 hover:bg-slate-50"
@@ -92,33 +90,30 @@ export default function ProjectPage() {
           </button>
         </div>
       </div>
-      <div className ="my-6">
-          <AddProjectForm onAdd={handleAddProject} />
+      <div className="my-6">
+        <AddProjectForm onAdd={handleAddProject} />
+        <div className="my-6 ">
+          <ProjectDashboard
+            projects={filteredProjects}
+            selectedProjectId={selectedProjectId}
+            onProjectClick={(id) => {
+              setSelectedProjectId(id);
+            }}
+            onDeleteProject={handleDeleteProject}
+          />
+          <div className="mt-6">
+            <ProjectDetailPanel
+              projectId={selectedProjectId}
+              projects={projects}
+            />
+          </div>
+        </div>
       </div>
 
-      <ProjectDashboard
-        projects={filteredProjects}
-        selectedProjectId={selectedProjectId}
-        onProjectClick={(id) => {
-          setSelectedProjectId(id);
-        }}
-      />
       <p className="mt-4 text-sm text-slate-600">
         Showing <span className="font-medium">{filteredProjects.length}</span>{" "}
         of <span className="font-medium">{projects.length}</span> projects
       </p>
-      {/*       {selectedProject ? (
-        <div className="mt-2">
-          <div className="text-base font-medium text-gray-900">
-            {selectedProject.name}
-          </div>
-          <div className="mt-1 text-sm font-mono text-gray-600">
-            id: {selectedProject.id}
-          </div>
-        </div>
-      ) : (
-        <p className="mt-2 text-sm text-gray-600">No project selected.</p>
-      )} */}
     </div>
   );
 }

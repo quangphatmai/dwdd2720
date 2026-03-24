@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
+import type { MouseEvent } from "react";
 import type { Project } from "../models/project";
 
 export type ProjectDashboardProps = {
   projects: Project[];
   selectedProjectId?: string | null;
   onProjectClick?: (id: string) => void;
+  onDeleteProject?: (id: string) => void;
 };
 
 type ActiveCardSummary = {
@@ -119,9 +121,7 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
     >
       <header className="mb-5 flex flex-col gap-4">
         <div>
-          <h2 className="title-md">
-            Project Dashboard
-          </h2>
+          <h2 className="title-md">Project Dashboard</h2>
           <p className="text-sm text-muted">
             DOM selection demo. Loaded:{" "}
             <span className="font-medium">{props.projects.length}</span>
@@ -162,16 +162,35 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
             No projects yet. Add a project to populate your dashboard.
           </div>
         ) : (
-          <ul data-role="project-list" className="divide-y divide-(--border-color)">
+          <ul
+            data-role="project-list"
+            className="divide-y divide-(--border-color)"
+          >
             {props.projects.map((p) => {
               const isSelected = p.id === props.selectedProjectId;
+              const isFocused = isSelected;
 
+              const handleRowClick = () => {
+                // console.log("ROW handler currentTarget:", e.currentTarget);
+                //console.log("ROW handler target:", e.target);
+                props.onProjectClick?.(p.id);
+              };
+
+              const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
+                e.stopPropagation();
+                // console.log("DELETE handler currentTarget:", e.currentTarget);
+                // console.log("DELETE handler target:", e.target);
+                const confirmed = window.confirm(
+                  `Delete project "${p.name}"? This action cannot be undone.`,
+                );
+                if (!confirmed) return;
+                props.onDeleteProject?.(p.id);
+              };
               return (
                 <li
                   key={p.id}
-                  onClick={() => {
-                    props.onProjectClick?.(p.id);
-                  }}
+                  tabIndex={0}
+                  onClick={handleRowClick}
                   data-project-card
                   data-status={p.status}
                   data-role="project-row"
@@ -180,19 +199,33 @@ export function ProjectDashboard(props: ProjectDashboardProps) {
                   className={[
                     "list-row flex cursor-pointer items-center justify-between gap-3 px-4 py-3.5",
                     isSelected ? "row-highlight" : "",
+                    isFocused ? "ring-2 ring-sky-400 ring-offset-2" : "",
                   ].join(" ")}
                 >
                   <div className="min-w-0">
-                    <div data-project-title className="truncate text-sm font-semibold text-(--text-primary)">
+                    <div
+                      data-project-title
+                      className="truncate text-sm font-semibold text-(--text-primary)"
+                    >
                       {p.name}
                     </div>
                     <div className="truncate text-xs text-muted">
                       Client: {p.clientName}
                     </div>
                   </div>
-
-                  <div className={`shrink-0 ${getStatusChipClasses(p.status)}`}>
-                    {formatStatusLabel(p.status)}
+                  <div className="flex gap-2">
+                    <div
+                      className={`shrink-0 ${getStatusChipClasses(p.status)}`}
+                    >
+                      {formatStatusLabel(p.status)}
+                    </div>
+                    <button
+                      type="button"
+                      className="shrink-0 rounded-md border border-rose-200 bg-rose-50 px-2 py-1 text-sm font-medium text-rose-700 hover:bg-rose-100"
+                      onClick={handleDeleteClick}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </li>
               );

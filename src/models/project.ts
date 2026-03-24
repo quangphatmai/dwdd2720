@@ -1,5 +1,8 @@
 export type ProjectStatus = "planned" | "active" | "blocked" | "done" | "draft" | "paused" | "completed";
 
+export type StatusFilter = ProjectStatus | "all";
+export type StatusInput = ProjectStatus | string | null | undefined;
+
 export interface Project {
   /** A stable identifier we never want to accidentally change */
   readonly id: string;
@@ -14,7 +17,7 @@ export interface Project {
   dueDate?: string;
 
   /** Tags are a list, so we use an array type */
-  tags?: string[];
+  tags?: string[] | null;
 
   /** Optional free-form notes */
   notes?: string;
