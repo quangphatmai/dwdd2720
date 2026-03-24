@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { ProjectDashboard } from "../components/ProjectDashboard";
-import { projects } from "../data/projects";
-import type { ProjectStatus } from "../models/project";
+import { projects as initialProjects } from "../data/projects";
+import type { Project, ProjectStatus } from "../models/project";
+import { AddProjectForm } from "../components/AddProjectForm";
 
 type StatusFilter = ProjectStatus | "all";
 
@@ -11,17 +12,14 @@ export default function ProjectPage() {
     null,
   );
 
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
+
   console.log("Current status filter:", statusFilter);
 
-  const visibleProjects =
-    statusFilter === "all"
-      ? projects
-      : projects.filter((p) => p.status === statusFilter);
-
-  const selectedProject = useMemo(() => {
-    if (!selectedProjectId) return undefined;
-    return projects.find((p) => p.id === selectedProjectId);
-  }, [selectedProjectId]);
+  const filteredProjects = useMemo(() => {
+    if (statusFilter === "all") return projects;
+    return projects.filter((p) => p.status === statusFilter);
+  }, [projects, statusFilter]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -36,6 +34,13 @@ export default function ProjectPage() {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, []);
+
+  function handleAddProject(project: Project) {
+    setProjects((prev) => [...prev, project]);
+
+    // Optional UX: select the newly added project
+    setSelectedProjectId(project.id);
+  }
 
   return (
     <div>
@@ -87,18 +92,22 @@ export default function ProjectPage() {
           </button>
         </div>
       </div>
+      <div className ="my-6">
+          <AddProjectForm onAdd={handleAddProject} />
+      </div>
+
       <ProjectDashboard
-        projects={visibleProjects}
+        projects={filteredProjects}
         selectedProjectId={selectedProjectId}
         onProjectClick={(id) => {
           setSelectedProjectId(id);
         }}
       />
       <p className="mt-4 text-sm text-slate-600">
-        Showing <span className="font-medium">{visibleProjects.length}</span> of{" "}
-        <span className="font-medium">{projects.length}</span> projects
+        Showing <span className="font-medium">{filteredProjects.length}</span>{" "}
+        of <span className="font-medium">{projects.length}</span> projects
       </p>
-      {selectedProject ? (
+      {/*       {selectedProject ? (
         <div className="mt-2">
           <div className="text-base font-medium text-gray-900">
             {selectedProject.name}
@@ -109,7 +118,7 @@ export default function ProjectPage() {
         </div>
       ) : (
         <p className="mt-2 text-sm text-gray-600">No project selected.</p>
-      )}
+      )} */}
     </div>
   );
 }

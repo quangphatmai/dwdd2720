@@ -14,13 +14,13 @@ export interface Project {
   dueDate?: string;
 
   /** Tags are a list, so we use an array type */
-  tags: string[];
+  tags?: string[];
 
   /** Optional free-form notes */
   notes?: string;
   ownerEmail?: string;
   estimatedHours?: number; // important: 0 is a valid number, but it's falsy
   description?: string;
-  days: number;
+  days?: number;
   clientName: string;
 }
