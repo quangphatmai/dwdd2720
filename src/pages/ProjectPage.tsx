@@ -6,7 +6,9 @@ import { AddProjectForm } from "../components/AddProjectForm";
 import { ProjectFilterBar } from "../components/ProjectFilterBar";
 import { ProjectDetailPanel } from "../components/ProjectDetailPanel";
 
+
 export default function ProjectPage() {
+
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null,

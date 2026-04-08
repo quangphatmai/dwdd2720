@@ -4,9 +4,9 @@
 const projectId = "PRJ-101";
 
 // These values might change as the project evolves
-let projectName = "Website Redesign";
-let taskCount: number = 42;
-let isActive = true;
+const projectName = "Website Redesign";
+const taskCount: number = 42;
+const isActive = true;
 
 console.log({ projectId, projectName, taskCount, isActive });
 
@@ -22,10 +22,10 @@ const maxCollaborators: number = 5;
 const isArchived: boolean = false;
 
 // A value that might not exist yet (e.g., not loaded from server)
-let lastSyncedAt: Date | undefined = undefined;
+const lastSyncedAt: Date | undefined = undefined;
 
 // A value that is intentionally empty (e.g., no description provided)
-let projectDescription: string | null = null;
+const projectDescription: string | null = null;
 
 console.log({ ownerEmail, maxCollaborators, isArchived, lastSyncedAt, projectDescription });
 
