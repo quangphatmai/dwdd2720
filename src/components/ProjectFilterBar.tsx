@@ -1,7 +1,7 @@
 // Adjust this import path to where your StatusFilter type/union is defined.
 import type { StatusFilter } from "../models/project";
 
-type ProjectFilterBarProps = {
+export type ProjectFilterBarProps = {
   value: StatusFilter;
   count: number;
   onChange: (value: StatusFilter) => void;

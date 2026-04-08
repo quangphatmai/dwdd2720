@@ -3,7 +3,7 @@
 // Adjust this import path to where your Project type is defined.
 import type { Project } from "../models/project";
 
-type ProjectDetailPanelProps = {
+export type ProjectDetailPanelProps = {
   projectId: string | null;
   projects: Project[];
 };

@@ -1,11 +1,52 @@
-export type ProjectStatus = "planned" | "active" | "blocked" | "done" | "draft" | "paused" | "completed";
+export type ProjectStatus =
+  | "planned"
+  | "active"
+  | "blocked"
+  | "done"
+  | "draft"
+  | "paused"
+  | "completed";
 
 export type StatusFilter = ProjectStatus | "all";
 export type StatusInput = ProjectStatus | string | null | undefined;
 
-export interface Project {
-  /** A stable identifier we never want to accidentally change */
+const allowedStatuses: readonly ProjectStatus[] = [
+  "draft",
+  "active",
+  "paused",
+  "completed",
+  "planned",
+  "done",
+] as const;
+
+export function normalizeStatus(input: StatusInput): ProjectStatus | null {
+  // Handle null/undefined early
+  if (input == null) return null;
+
+  // If it's already a ProjectStatus, it's safe.
+  // But at runtime it's still just a string, so we validate with a list.
+  if (typeof input === "string") {
+    const trimmed = input.trim().toLowerCase();
+    if ((allowedStatuses as readonly string[]).includes(trimmed)) {
+      return trimmed as ProjectStatus;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Base shape for all entity types in the app.
+ * Any database-backed record should extend this.
+ */
+export interface BaseEntity {
+  /** Stable identifier — never changes after creation */
   readonly id: string;
+  /** When the record was created (ISO 8601 string or epoch ms) */
+  createdAt?: string;
+}
+
+export interface Project extends BaseEntity {
 
   /** Human-friendly name shown in the UI */
   name: string;
@@ -17,12 +58,12 @@ export interface Project {
   dueDate?: string;
 
   /** Tags are a list, so we use an array type */
-  tags?: string[] | null;
+  tags?: string[] 
 
   /** Optional free-form notes */
   notes?: string;
   ownerEmail?: string;
-  estimatedHours?: number; // important: 0 is a valid number, but it's falsy
+  estimatedHours?: number; /** 0 is valid — use ?? not || for defaults */
   description?: string;
   days?: number;
   clientName: string;
@@ -74,31 +115,6 @@ export function statusLabelSwitch(status: ProjectStatus): string {
 export function canEditProject(status: ProjectStatus): boolean {
   // Client story rule example: completed projects are read-only.
   return status !== "completed";
-}
-
-const allowedStatuses: readonly ProjectStatus[] = [
-  "draft",
-  "active",
-  "paused",
-  "completed",
-  "planned",
-  "done",
-] as const;
-
-export function normalizeStatus(input: StatusInput): ProjectStatus | null {
-  // Handle null/undefined early
-  if (input == null) return null;
-
-  // If it's already a ProjectStatus, it's safe.
-  // But at runtime it's still just a string, so we validate with a list.
-  if (typeof input === "string") {
-    const trimmed = input.trim().toLowerCase();
-    if ((allowedStatuses as readonly string[]).includes(trimmed)) {
-      return trimmed as ProjectStatus;
-    }
-  }
-
-  return null;
 }
 
 // Example of discriminated unions for project records
