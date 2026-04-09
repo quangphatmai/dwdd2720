@@ -24,7 +24,7 @@ const svc1 = new ProjectService(projects.slice(0, 3));
 const svc2 = new ProjectService(projects.slice(3));
 
 const svc3 = new ProjectService(projects); 
-console.log(svc3.count()); // This will fail or return NaN 
+console.log(svc3.count()); 
 
 console.log(svc1.count()); // 3
 console.log(svc2.count()); // 3
