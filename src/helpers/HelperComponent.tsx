@@ -1,7 +1,6 @@
-import { formatTaskLabel, sumHours } from "./helpers";
-import { formatAssignee, formatStatus } from "./helpers";
-import { warnIfNegativeHours } from "./helpers";
-import { summarizeTask, getTaskHours, type Task } from "./helpers";
+import { warnIfNegativeHours, sumHours } from "../utils";
+import { formatTaskLabel, formatAssignee, formatStatus } from "../utils";
+import { summarizeTask, getTaskHours, type Task } from "../utils";
 
 console.log(formatTaskLabel("Fix login bug", "Website Redesign"));
 console.log("Total hours (should be 6):", sumHours([1, 2, 3]));

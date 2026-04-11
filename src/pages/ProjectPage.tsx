@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { ProjectDashboard } from "../components/ProjectDashboard";
 import { projects as initialProjects } from "../data/projects";
-import type { Project, StatusFilter } from "../models/project";
+import type { Project, StatusFilter } from '../models'
 import { AddProjectForm } from "../components/AddProjectForm";
 import { ProjectFilterBar } from "../components/ProjectFilterBar";
 import { ProjectDetailPanel } from "../components/ProjectDetailPanel";

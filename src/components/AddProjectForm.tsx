@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import type { Project } from "../models/project";
+import type { Project } from "../models";
 
 export type AddProjectFormProps = {
   onAdd: (project: Project) => void;

@@ -1,5 +1,5 @@
 import { projects } from "../data/projects";
-import type { Project } from "../models/project";
+import type { Project } from "../models";
 import { findProjectById, listOverdueProjects } from "../utils/projectUtils"
 
 type TrackerCard = {

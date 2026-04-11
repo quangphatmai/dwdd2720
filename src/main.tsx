@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.tsx'
 
 // testing the ProjectService with some sample data
-import { ProjectService } from './services/ProjectService'; 
+import { ProjectService } from './services'; 
 import { projects } from './data/projects'; 
 // const svc = new ProjectService(projects); 
 // console.log('ProjectService count:', svc.count()); 
@@ -31,6 +31,15 @@ console.log(svc2.count()); // 3
 // svc1.projects and svc2.projects are completely separate arrays.
 // `this` in svc1.count() refers to svc1.
 // `this` in svc2.count() refers to svc2.
+
+/* const serviceTest4 = new ProjectService(projects);
+serviceTest4.projects.push({ id: 'hacked', name: 'Rogue Project',
+  status: 'active', clientName: 'Nobody' });
+
+  console.log(serviceTest4.projects.find(p => p.id === 'hacked')); */
+  
+// This is a problem! We can mutate the internal state of the service from outside.
+// We'll fix this in Topic 4 by making the projects property private.
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

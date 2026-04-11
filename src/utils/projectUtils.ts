@@ -1,4 +1,4 @@
-import type { Project} from "../models/project";
+import type { Project, ProjectStatus } from "../models";
 
 export function upcomingDeadlines(projects: Project[]): Project[] {
   // Business rule: only projects that actually have a due date belong here
@@ -14,19 +14,19 @@ export function printDueDateUnsafe(project: Project): string {
   return project.dueDate ? project.dueDate.toUpperCase() : "NO DUE DATE";
 }
 
-/* export function getProjectsByStatus(
+export function getProjectsByStatus(
   projects: Project[],
   status: ProjectStatus,
 ): Project[] {
   return projects.filter((p) => p.status === status);
-} */
+} 
 
-/* export function countByStatus(
+ export function countByStatus(
   projects: Project[],
   status: ProjectStatus,
 ): number {
   return getProjectsByStatus(projects, status).length;
-} */
+}
 
 export function formatDueDate(project: Project): string {
   // Optional property: we must handle the "missing" case
@@ -37,12 +37,12 @@ export function formatDueDate(project: Project): string {
 // Arrow function + explicit return type.
 // Returns undefined if not found.
 
-/* export const findProjectById = (
+export const findProjectById = (
   projects: Project[],
   id: string,
 ): Project | undefined => {
   return projects.find((project) => project.id === id);
-}; */
+};
 
 // Converts an ISO date string like "2025-10-01" into a number for comparison.
 // Returns NaN if the date string is invalid.

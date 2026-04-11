@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { MouseEvent } from "react";
-import type { Project } from "../models/project";
+import type { Project } from "../models";
 
 export type ProjectDashboardProps = {
   projects: Project[];

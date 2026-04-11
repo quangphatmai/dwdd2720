@@ -1,5 +1,5 @@
 // Adjust this import path to where your StatusFilter type/union is defined.
-import type { StatusFilter } from "../models/project";
+import type { StatusFilter } from "../models";
 
 export type ProjectFilterBarProps = {
   value: StatusFilter;
