@@ -4,6 +4,11 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 
+// import the generic function demo before we render the app
+import { demoIdentity, demoFindById, demoUpdateById } from "./utils/generics";
+
+
+
 // testing the ProjectService with some sample data
 import { ProjectService } from './services'; 
 import { projects } from './data/projects'; 
@@ -40,6 +45,12 @@ serviceTest4.projects.push({ id: 'hacked', name: 'Rogue Project',
   
 // This is a problem! We can mutate the internal state of the service from outside.
 // We'll fix this in Topic 4 by making the projects property private.
+
+
+// just a quick test of the generics function before we render the app
+demoIdentity();
+demoFindById();
+demoUpdateById();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

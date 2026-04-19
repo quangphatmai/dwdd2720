@@ -1,9 +1,11 @@
 import { useState } from "react";
+import Render from "../components/Render";
 
 export default function HomePage() {
   const [count, setCount] = useState(0);
 
   return (
+    <>
     <section className="card p-6 sm:p-7">
       <h1 className="title-lg">
         My First Vite + TypeScript + Tailwind App
@@ -25,7 +27,12 @@ export default function HomePage() {
         >
           Increment
         </button>
+
       </div>
     </section>
+    <section className="card p-6 sm:p-7 mt-6">
+      <Render />
+    </section>
+    </>
   );
 }

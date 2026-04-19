@@ -1,4 +1,5 @@
 import HelperComponent from "../helpers/HelperComponent";
+import Render from "../components/Render";
 
 export default function HelpersPage() {
   return (
@@ -9,6 +10,9 @@ export default function HelpersPage() {
       </p>
       <div className="mt-4 card-soft px-4 py-3 text-sm text-muted">
         <HelperComponent />
+      </div>
+      <div className="mt-6">
+        <Render />
       </div>
     </section>
   );
