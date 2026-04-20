@@ -1,5 +1,7 @@
 // src/utils/generics.ts
-import type { ID, Task, TeamMember } from "../models/entities";
+import type { Task, TeamMember } from "../domain/entities";
+
+export type ID = string;
 
 export type WithId = { id: ID };
 export function updateById<T extends WithId>(
@@ -15,11 +17,11 @@ export function updateById<T extends WithId>(
 
 export function demoUpdateById(): void {
   const tasks: Task[] = [
-    { id: "t1", projectId: "p1", title: "Write specs", done: false, priority: "high" },
-    { id: "t2", projectId: "p1", title: "Build UI", done: false, priority: "medium" },
+    { id: "t1", name: "Write specs", kind: "task", projectId: "p1", dueDateIso: "2026-01-15", completed: false },
+    { id: "t2", name: "Build UI", kind: "task", projectId: "p1", dueDateIso: "2026-01-20", completed: false },
   ];
 
-  const updated = updateById(tasks, "t2", { title: "Build UI (V1)", done: true });
+  const updated = updateById(tasks, "t2", { name: "Build UI (V1)", completed: true });
 
   console.log("Before:", tasks.find((t) => t.id === "t2"));
   console.log("After:", updated.find((t) => t.id === "t2"));
@@ -37,24 +39,24 @@ export function findById<T extends WithId>(items: T[], id: ID): T | undefined {
 
 export function demoFindById(): void {
   const tasks: Task[] = [
-    { id: "t1", projectId: "p1", title: "Plan sprint", done: false, priority: "high" },
-    { id: "t2", projectId: "p1", title: "Implement UI", done: false, priority: "medium" },
+    { id: "t1", name: "Plan sprint", kind: "task", projectId: "p1", dueDateIso: "2026-01-15", completed: false },
+    { id: "t2", name: "Implement UI", kind: "task", projectId: "p1", dueDateIso: "2026-01-20", completed: false },
   ];
 
   const members: TeamMember[] = [
-    { id: "u1", fullName: "Avery Chen", role: "pm", assignedProjectIds: ["p1"] },
-    { id: "u2", fullName: "Riley Patel", role: "dev", assignedProjectIds: ["p1", "p2"] },
+    { id: "u1", name: "Avery Chen", kind: "member", role: "pm", availability: "full-time" },
+    { id: "u2", name: "Riley Patel", kind: "member", role: "dev", availability: "part-time" },
   ];
 
   const foundTask = findById(tasks, "t2");
   if (foundTask) {
-    console.log("Found task title:", foundTask.title);
+    console.log("Found task name:", foundTask.name);
   } else {
     console.log("Task not found");
   }
 
   const foundMember = findById(members, "u1");
-  console.log("Found member name:", foundMember?.fullName ?? "Missing");
+  console.log("Found member name:", foundMember?.name ?? "Missing");
 }
 
 
@@ -66,14 +68,15 @@ export function identity<T>(value: T): T {
 export function demoIdentity(): void {
   const task: Task = {
     id: "t1",
+    name: "Set up Tailwind styles",
+    kind: "task",
     projectId: "p1",
-    title: "Set up Tailwind styles",
-    done: false,
-    priority: "medium",
+    dueDateIso: "2026-01-25",
+    completed: false,
   };
 
   const result = identity(task);
 
   // Because of generics, result is inferred as Task (not any)
-  console.log("identity<Task> result title:", result.title);
+  console.log("identity<Task> result name:", result.name);
 }

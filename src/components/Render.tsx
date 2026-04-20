@@ -1,30 +1,32 @@
 import { useEffect, useRef } from "react";
-import type { Project, Task, TeamMember } from "../models/entities";
+import type { Project, Task, TeamMember } from "../domain/entities";
 import { el, renderList } from "../utils/render";
 
 const projects: Project[] = [
-  { id: "p1", name: "Capstone", status: "active", dueDateISO: "2026-01-15" },
+  { id: "p1", name: "Capstone", kind: "project", status: "active", budgetUsd: 15000 },
 ];
 
 const tasks: Task[] = [
   {
     id: "t1",
+    name: "Add generic helpers",
+    kind: "task",
     projectId: "p1",
-    title: "Add generic helpers",
-    done: false,
-    priority: "high",
+    dueDateIso: "2026-01-15",
+    completed: false,
   },
   {
     id: "t2",
+    name: "Render entities",
+    kind: "task",
     projectId: "p1",
-    title: "Render entities",
-    done: true,
-    priority: "medium",
+    dueDateIso: "2026-01-20",
+    completed: true,
   },
 ];
 
 const members: TeamMember[] = [
-  { id: "u1", fullName: "Avery Chen", role: "pm", assignedProjectIds: ["p1"] },
+  { id: "u1", name: "Avery Chen", kind: "member", role: "pm", availability: "full-time" },
 ];
 
 export default function Render() {
@@ -42,12 +44,12 @@ export default function Render() {
     });
 
     renderList(tasksRef.current, tasks, (t) => {
-      const label = t.done ? "done" : "todo";
-      return el("li", "mt-1", `[${label}] ${t.title} (${t.priority})`);
+      const label = t.completed ? "done" : "todo";
+      return el("li", "mt-1", `[${label}] ${t.name}`);
     });
 
     renderList(membersRef.current, members, (m) => {
-      return el("li", "mt-1", `${m.fullName} — ${m.role}`);
+      return el("li", "mt-1", `${m.name} — ${m.role}`);
     });
   }, []);
 
