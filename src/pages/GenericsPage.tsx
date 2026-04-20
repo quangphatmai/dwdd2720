@@ -34,15 +34,16 @@ export default function GenericsPage() {
       const teamManager = new DataManager<TeamMember>();
 
       // Add sample data
-      projectsManager.add({ id: "p1", name: "Website Redesign", status: "active" });
-      projectsManager.add({ id: "p2", name: "Mobile MVP", status: "planned" });
-      projectsManager.add({ id: "p3", name: "API Integration", status: "active" });
-      projectsManager.add({ id: "p4", name: "Dashboard Upgrade", status: "planned" });
-      projectsManager.add({ id: "p5", name: "Cloud Migration", status: "active" });
+      const now = Date.now();
+      projectsManager.add({ id: "p1", kind: "project", createdAt: now, name: "Website Redesign", status: "active" });
+      projectsManager.add({ id: "p2", kind: "project", createdAt: now, name: "Mobile MVP", status: "planned" });
+      projectsManager.add({ id: "p3", kind: "project", createdAt: now, name: "API Integration", status: "active" });
+      projectsManager.add({ id: "p4", kind: "project", createdAt: now, name: "Dashboard Upgrade", status: "planned" });
+      projectsManager.add({ id: "p5", kind: "project", createdAt: now, name: "Cloud Migration", status: "active" });
 
-      tasksManager.add({ id: "t1", projectId: "p1", title: "Create wireframes", done: false, priority: "medium" });
+      tasksManager.add({ id: "t1", kind: "task", createdAt: now, projectId: "p1", title: "Create wireframes", done: false, priority: "medium" });
 
-      teamManager.add({ id: "u1", fullName: "Avery Chen", role: "pm", assignedProjectIds: ["p1"] });
+      teamManager.add({ id: "u1", kind: "member", createdAt: now, fullName: "Avery Chen", role: "pm", assignedProjectIds: ["p1"] });
 
       // Update project p1 to "completed"
       projectsManager.updateById("p1", { status: "completed" });
@@ -51,7 +52,7 @@ export default function GenericsPage() {
       tasksManager.updateById("t1", { done: true, priority: "high" });
 
       // Add another team member
-      teamManager.add({ id: "u2", fullName: "Jordan Smith", role: "dev", assignedProjectIds: ["p2"] });
+      teamManager.add({ id: "u2", kind: "member", createdAt: now, fullName: "Jordan Smith", role: "dev", assignedProjectIds: ["p2"] });
 
       managersRef.current = { projectsManager, tasksManager, teamManager };
     }

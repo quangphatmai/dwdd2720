@@ -5,3 +5,4 @@ export { formatTaskLabel, formatAssignee, formatStatus } from './formatting';
 export { sumHours, warnIfNegativeHours } from './math';
 export { summarizeTask, getTaskHours, type Task } from './tasks';
 export { isNonEmptyString, isValidEstimateHours, isProjectStatus, validateProject } from './validation';
+export { renderEntityCard } from './renderEntityCard';

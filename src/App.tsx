@@ -10,12 +10,14 @@ import HelpersPage from "./pages/HelpersPage";
 import HomePage from "./pages/HomePage";
 import ProjectPage from "./pages/ProjectPage";
 import TrackerPage from "./pages/TrackerPage";
+import UnionsPage from "./pages/UnionsPage";
 
 const navItems = [
   { to: "/", label: "Home" },
   { to: "/projects", label: "Projects" },
   { to: "/tracker", label: "Tracker" },
   { to: "/generics", label: "Generics" },
+  { to: "/unions", label: "Unions" },
   { to: "/helpers", label: "Helpers" },
 ];
 
@@ -130,6 +132,7 @@ function App() {
           <Route path="/projects" element={<ProjectPage />} />
           <Route path="/tracker" element={<TrackerPage />} />
           <Route path="/generics" element={<GenericsPage />} />
+          <Route path="/unions" element={<UnionsPage />} />
           <Route path="/helpers" element={<HelpersPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -13,8 +13,8 @@ export function updateEntity<T extends { id: unknown; kind: unknown; createdAt: 
 
 // Example “view model” helpers using Pick/Omit
 export type ProjectListItem = Pick<
-  import("./types").Project,
+  import("../models/entities").Project,
   "id" | "name" | "status"
 >;
 
-export type TaskEditFormModel = Omit<import("./types").Task, "createdAt">;
+export type TaskEditFormModel = Omit<import("../models/entities").Task, "createdAt">;

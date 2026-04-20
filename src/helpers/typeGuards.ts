@@ -1,4 +1,4 @@
-import type { Project, Task, TeamMember, AnyEntity } from "./types";
+import type { Project, Task, TeamMember, AnyEntity } from "../models/entities";
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -11,7 +11,11 @@ export function isProject(value: unknown): value is Project {
     typeof value.id === "string" &&
     typeof value.createdAt === "number" &&
     typeof value.name === "string" &&
-    (value.status === "planned" || value.status === "active" || value.status === "done")
+    (value.status === "planned" || 
+     value.status === "active" || 
+     value.status === "paused" ||
+     value.status === "completed" ||
+     value.status === "done")
   );
 }
 
@@ -23,7 +27,7 @@ export function isTask(value: unknown): value is Task {
     typeof value.createdAt === "number" &&
     typeof value.projectId === "string" &&
     typeof value.title === "string" &&
-    typeof value.completed === "boolean"
+    typeof value.done === "boolean"
   );
 }
 
@@ -34,7 +38,7 @@ export function isTeamMember(value: unknown): value is TeamMember {
     typeof value.id === "string" &&
     typeof value.createdAt === "number" &&
     typeof value.fullName === "string" &&
-    (value.role === "pm" || value.role === "dev" || value.role === "design")
+    (value.role === "pm" || value.role === "dev" || value.role === "designer")
   );
 }
 

@@ -1,0 +1,12 @@
+.progress-container {
+  --progress-width: 0%;
+}
+
+.progress-container[data-width] {
+  --progress-width: attr(data-width);
+}
+
+.progress-bar {
+  width: var(--progress-width, 0%);
+}
+

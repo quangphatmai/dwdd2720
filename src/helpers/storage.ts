@@ -1,4 +1,4 @@
-import type { AnyEntity, Project, Task, TeamMember } from "./types";
+import type { AnyEntity, Project, Task, TeamMember } from "../models/entities";
 import { isAnyEntity, isProject, isTask, isTeamMember, isRecord } from "./typeGuards";
 
 const STORAGE_KEY = "pm.entities.v1";
