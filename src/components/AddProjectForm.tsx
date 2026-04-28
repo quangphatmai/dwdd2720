@@ -6,7 +6,6 @@ export type AddProjectFormProps = {
 };
 
 function makeId() {
-  // Prefer a real UUID when available; fallback keeps the tutorial working everywhere.
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
@@ -17,12 +16,12 @@ export function AddProjectForm({ onAdd }: AddProjectFormProps) {
   const [name, setName] = useState<string>("");
   const [clientName, setClientName] = useState<string>("");
   const [status, setStatus] = useState<Project["status"]>("planned");
+  const [dueDate, setDueDate] = useState<string>("");
+  const [tags, setTags] = useState<string>("");
 
   const canSubmit = name.trim().length > 0 && clientName.trim().length > 0;
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    // We prevent default so the browser does NOT navigate away (refresh).
-    // In a React SPA, navigation would wipe state like the projects list.
     e.preventDefault();
 
     if (!canSubmit) return;
@@ -32,14 +31,21 @@ export function AddProjectForm({ onAdd }: AddProjectFormProps) {
       name: name.trim(),
       clientName: clientName.trim(),
       status,
+      dueDate: dueDate || undefined,
+      tags: tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0) || undefined,
     };
 
     onAdd(newProject);
 
-    // Reset controlled inputs by resetting state.
+    // Reset
     setName("");
     setClientName("");
     setStatus("planned");
+    setDueDate("");
+    setTags("");
   }
 
   return (
@@ -76,10 +82,35 @@ export function AddProjectForm({ onAdd }: AddProjectFormProps) {
             value={status}
             onChange={(e) => setStatus(e.target.value as Project["status"])}
           >
+            <option value="draft">Draft</option>
             <option value="planned">Planned</option>
             <option value="active">Active</option>
+            <option value="paused">Paused</option>
+            <option value="blocked">Blocked</option>
+            <option value="done">Done</option>
             <option value="completed">Completed</option>
           </select>
+        </label>
+
+        <label className="grid gap-1">
+          <span className="text-sm font-medium text-slate-700">Due Date (optional)</span>
+          <input
+            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
+        </label>
+
+        <label className="grid gap-1">
+          <span className="text-sm font-medium text-slate-700">Tags (optional, comma-separated)</span>
+          <input
+            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            type="text"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            placeholder="e.g., frontend, urgent, design"
+          />
         </label>
 
         <div className="flex items-center gap-3 pt-1">
@@ -90,9 +121,6 @@ export function AddProjectForm({ onAdd }: AddProjectFormProps) {
           >
             Add project
           </button>
-          <p className="text-sm text-slate-600">
-            Tip: Press Enter to submit when focused in a field.
-          </p>
         </div>
       </form>
     </section>
